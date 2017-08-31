@@ -13,9 +13,9 @@
 ** GNU General Public License for more details. You should have received a copy of the GNU General Public License **
 ** along with this program.  If not, see <http://www.gnu.org/licenses/>.                                          **
 **                                                                                                                **
-** Vers.  Date       Developer           Comments                                                                 **
-** ====== ========== =================== ======================================================================== **
-** 1.0.0a 2017-08-27 Arnd@SV-Zanshin.Com Started coding                                                           **
+** Vers.  Date       Developer                     Comments                                                       **
+** ====== ========== ============================= ============================================================== **
+** 1.0.0a 2017-08-27 https://github.com/SV-Zanshin Started coding                                                 **
 **                                                                                                                **
 *******************************************************************************************************************/
 #include "Arduino.h"                                                          // Arduino data type definitions    //
@@ -45,7 +45,6 @@
       uint8_t _I2C[MB85_MAX_DEVICES]={0};                                     // List of device addresses         //
       uint8_t _MemSize[MB85_MAX_DEVICES]={0};                                 // Memory size in KB                //
       bool     _TransmissionStatus = false;                                   // I2C communications status        //
-
       /*************************************************************************************************************
       ** Declare the getData and putData methods as template functions. All device I/O is done through these two  **
       ** functions. The two functions are designed so that only the device, the address and a variable are passed **
@@ -71,7 +70,7 @@
         return(structSize);                                                   // return the number of bytes read  //
       } // of method getData()                                                //----------------------------------//
       template<typename T>uint8_t &putData(const uint8_t device,              // method to write a structure      //
-                                           const uint16_t addr,const T &value){//                                  //
+                                           const uint16_t addr,const T &value){//                                 //
         const uint8_t* bytePtr = (const uint8_t*)&value;                      // Pointer to structure beginning   //
         uint8_t  structSize   = sizeof(T);                                    // Number of bytes in structure     //
         if (device>=_DeviceCount) return;                                     // Ignore out of bounds indices     //
