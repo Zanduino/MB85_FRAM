@@ -1,6 +1,12 @@
 /*******************************************************************************************************************
 ** Class definition header for the Fujitsu MB85_FRAM family of memories.                                          **
 **                                                                                                                **
+
+** MB85RC1MT  1Mbit   (128K x 8bit) ManufacturerID 0x00A, Product ID = 0x758 (Density = 0x7)                      **
+** MB85RC512T 512Kbit ( 64K x 8bit) ManufacturerID 0x00A, Product ID = 0x658 (Density = 0x6)                      **
+** MB85RC256V 256Kbit ( 32K x 8bit) ManufacturerID 0x00A, Product ID = 0x510 (Density = 0x5)                      **
+
+
 ** Although programming for the Arduino and in c/c++ is new to me, I'm a professional programmer and have learned,**
 ** over the years, that it is much easier to ignore superfluous comments than it is to decipher non-existent ones;**
 ** so both my comments and variable names tend to be verbose. The code is written to fit in the first 80 spaces   **
@@ -32,6 +38,7 @@
   /*****************************************************************************************************************
   ** Declare enumerated types used in the class                                                                   **
   *****************************************************************************************************************/
+  
   /*****************************************************************************************************************
   ** Main MB85_FRAM class for the temperature / humidity / pressure sensor                                        **
   *****************************************************************************************************************/
@@ -84,4 +91,3 @@
       } // of method putData()                                                //----------------------------------//
   }; // of MB85_FRAM class definition                                         //                                  //
 #endif                                                                        //----------------------------------//
-
