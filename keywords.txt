@@ -14,6 +14,7 @@ begin	KEYWORD2
 read	KEYWORD2
 write	KEYWORD2
 totalBytes	KEYWORD2
+memnSize	KEYWORD2
 
 ########################
 # Constants (LITERAL1) #
