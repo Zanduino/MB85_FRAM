@@ -10,7 +10,10 @@ MB85_FRAM	KEYWORD1
 ####################################
 # Methods and Functions (KEYWORD2) #
 ####################################
-begin		          	KEYWORD2
+begin	KEYWORD2
+read	KEYWORD2
+write	KEYWORD2
+totalBytes	KEYWORD2
 
 ########################
 # Constants (LITERAL1) #

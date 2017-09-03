@@ -14,62 +14,96 @@
 MB85_FRAM_Class::MB85_FRAM_Class()  {}                                        // Empty & unused class constructor //
 MB85_FRAM_Class::~MB85_FRAM_Class() {}                                        // Empty & unused class destructor  //
 /*******************************************************************************************************************
-** Method begin starts communications with the device. There are 2 possible memory sizes, 8KB and 32KB which look **
-** identical and have the same I2C address ranges as well as instruction sets.                                    **
+** Method begin starts communications with the device. There are 4 possible memory sizes, 8kB, 16kB, 32kB, and    **
+** 64kB and this function will automatically determine the size of each memory found. The memories will wrap      **
+** around from the highest-address back to 0 on reads/writes and the detection process makes use of this feature. **
+** The contents of memory address 0 is saved and overwritten with 0x00. Then, starting with the smallest memory,  **
+** the value of the highest value for that memory plus 1 is stored and written to 0xFF. If address 0 has changed  **
+** to 0xFF then we know we've had a wrap-around and have identified the chip, otherwise we repeat the procedure   **
+** for the next possible memory size address and so on.                                                           **
 *******************************************************************************************************************/
-bool MB85_FRAM_Class::begin() {                                               // Find I2C device                  //
-  uint8_t devInfo[3] = { 0, 0, 0 };                                           // store device information         //
+uint8_t MB85_FRAM_Class::begin() {                                            // Find I2C device                  //
   Wire.begin();                                                               // Start I2C as master device       //
   for(uint8_t i=MB85_MIN_ADDRESS;i<MB85_MIN_ADDRESS+8;i++) {                  // loop all possible addresses      //
     Wire.beginTransmission(i);                                                // Check current address for device //
     if (Wire.endTransmission()==0) {                                          // If no error we have a device     //
-      Wire.beginTransmission(MB85_SLAVE_ID_ADDRESS>>1);                       // Use code to get back the mfgr    //
-      Wire.write(i<<1);                                                       // and device id.                   //
-      _TransmissionStatus = Wire.endTransmission(false);                      // Keep control of I2C bus          //
-      Wire.requestFrom(MB85_SLAVE_ID_ADDRESS>>1,3);                           // Request 3 data bytes             //
-      devInfo[0]=Wire.read();devInfo[1]=Wire.read();devInfo[2]=Wire.read();   // Get the 3 data bytes             //
-      if (((devInfo[0]<<4)+(devInfo[1]>>4))==0xA &&                           // If the manufacturer and the      //
-          (((devInfo[1] & 0x0F) << 8) + devInfo[2]) == 0x510) {               // product ID match the success     //
-        /***********************************************************************************************************
-        ** There are several different chips which match this ID, we need to determine if it is an 8Kb or a 32Kb  **
-        ** memory. The device has no direct means of returning the size. But we can take advantage of the fact    **
-        ** the memory overlows automagically back to address 0 on reads/writes. So we store the current contents  **
-        ** of addr(0), addr(32767) and addr(32768). If the values for 0 and 32768 are different then we know that **
-        ** it cannot be the 8KB device. Otherwise we write a new value to addr(32768) and then read addr(0); if   **
-        ** addr(0) has changed then we know we had an overflow backt to the beginning and that it is an 8KB FRAM, **
-        ** then we reset the data to what it was before the test started                                          **
-        ***********************************************************************************************************/
+      for(uint16_t memSize=8192;memSize!=0;memSize=memSize*2) {               // Check each memory size           //
+                                                                              //----------------------------------//
         Wire.beginTransmission(i);                                            // Start transmission               //
         Wire.write((uint8_t)0);Wire.write((uint8_t)0);                        // Start at address 0               //
         _TransmissionStatus = Wire.endTransmission();                         // Close transmission               //
         Wire.requestFrom(i,(uint8_t)1);                                       // Request 1 byte of data           //
-        devInfo[0] = Wire.read();                                             // Load to array                    //
-        Wire.beginTransmission(i);                                            // Start transmission               //
-        Wire.write(0x1F);Wire.write(0xFF);                                    // Position to address 8191         //
-        _TransmissionStatus = Wire.endTransmission();                         // Close transmission               //
-        Wire.requestFrom(i,(uint8_t)2);                                       // Request two bytes of data        //
-        devInfo[1] = Wire.read();                                             // Get two more bytes               //
-        devInfo[2] = Wire.read();                                             //                                  //
+        uint8_t minimumByte = Wire.read();                                    // Store value of byte 0            //
+                                                                              //----------------------------------//
         Wire.beginTransmission(i);                                            // Start transmission               //
         Wire.write((uint8_t)0);Wire.write((uint8_t)0);                        // Start at address 0               //
-        Wire.write(~devInfo[0]);                                              // write the ~ (not) value          //
+        Wire.write(0xFF);                                                     // write high value to address 0    //
         _TransmissionStatus = Wire.endTransmission();                         // Close transmission               //
+                                                                              //----------------------------------//
         Wire.beginTransmission(i);                                            // Start transmission               //
-        Wire.write(0x1F);Wire.write(0xFF);                                    // Position to address 8191         //
+        Wire.write((uint8_t)memSize>>8);                                      // Write MSB of address             //
+        Wire.write((uint8_t)memSize);                                         // Write LsB of address             //
         _TransmissionStatus = Wire.endTransmission();                         // Close transmission               //
-        Wire.requestFrom(i,(uint8_t)2);                                       // Request 2 bytes of data          //
-        Wire.read();                                                          // ignore first byte                //
-        if (Wire.read()==devInfo[2]) {                                        // If the values match, then we have//
-          _I2C[i-MB85_MIN_ADDRESS] = 32;                                      // no overflow                      //
+        Wire.requestFrom(i,(uint8_t)1);                                       // Request 1 byte of data           //
+        uint8_t maximumByte = Wire.read();                                    // Store value of high byte for chip//
+                                                                              //----------------------------------//
+        Wire.beginTransmission(i);                                            // Start transmission               //
+        Wire.write((uint8_t)memSize>>8);                                      // Write MSB of address             //
+        Wire.write((uint8_t)memSize);                                         // Write LsB of address             //
+        Wire.write(0x00);                                                     // write low value to max address   //
+        _TransmissionStatus = Wire.endTransmission();                         // Close transmission               //
+                                                                              //----------------------------------//
+        Wire.beginTransmission(i);                                            // Start transmission               //
+        Wire.write((uint8_t)0);Wire.write((uint8_t)0);                        // Start at address 0               //
+        _TransmissionStatus = Wire.endTransmission();                         // Close transmission               //
+        Wire.requestFrom(i,(uint8_t)1);                                       // Request 1 byte of data           //
+        uint8_t newMinimumByte = Wire.read();                                 // Store value of byte 0            //
+        if(newMinimumByte!=0x00) {                                            // If the value has changed         //
+          _I2C[i-MB85_MIN_ADDRESS] = memSize/1024;                            // Store memory size in kB          //
+          Wire.beginTransmission(i);                                          // Start transmission               //
+          Wire.write((uint8_t)0);Wire.write((uint8_t)0);                      // Position to address 0            //
+          Wire.write(minimumByte);                                            // restore original value           //
+          _TransmissionStatus = Wire.endTransmission();                       // Close transmission               //
+         break;                                                               // Exit the loop                    //
         } else {                                                              //                                  //
-          _I2C[i-MB85_MIN_ADDRESS] = 8;                                       //                                  //
-        } // of if-then-else we have a wraparound                             //                                  //
-        Wire.beginTransmission(i);                                            // Start transmission               //
-        Wire.write((uint8_t)0);Wire.write((uint8_t)0);                        // Start at address 0               //
-        Wire.write(devInfo[0]);                                               // Restore original data            //
-        _TransmissionStatus = Wire.endTransmission();                         // Close transmission               //
-      } // of if-then we have found a MB85xxxx FRAM                           //                                  //
+          Wire.beginTransmission(i);                                          // Start transmission               //
+          Wire.write((uint8_t)memSize>>8);                                    // Write MSB of address             //
+          Wire.write((uint8_t)memSize);                                       // Write LsB of address             //
+          Wire.write(maximumByte);                                            // restore original value           //
+          _TransmissionStatus = Wire.endTransmission();                       // Close transmission               //
+        } // of if-then-else we've got a wraparound                           //                                  //
+        if (!_I2C[i-MB85_MIN_ADDRESS]) _I2C[i-MB85_MIN_ADDRESS] = 32;         // If none of the above, then 32kB  //
+      } // of for-next loop for each memory size                              //                                  //
+      _DeviceCount++;                                                         // Increment the found count        //
     } // of if-then we have found a device                                    //                                  //
   } // of for-next each I2C address loop                                      //                                  //
-  return false;                                                               // return failure if we get here    //
-} // of method begin()                                                        //                                  //
+  return _DeviceCount;                                                        // return number of memories found  //
+} // of method begin()                                                        //----------------------------------//
+
+/*******************************************************************************************************************
+** Method totalBytes() returns the sum of all the memories found                                                  **
+*******************************************************************************************************************/
+uint32_t MB85_FRAM_Class::totalBytes() {                                      // Return total memory found        //
+  uint32_t bytesFound = 0;                                                    // Initialize return variable       //
+  for(uint8_t i=0;i<MB85_MAX_DEVICES;i++) bytesFound += _I2C[i];              // Sum up the the kilobytes         //
+  return(bytesFound*1024);                                                    // return total bytes               //
+} // of method totalBytes()                                                   //----------------------------------//
+
+/*******************************************************************************************************************
+** Method getDevice() is an internal call used in the read() and write() templates to compute which memory to     **
+** use for a given memory address                                                                                 **
+*******************************************************************************************************************/
+uint8_t MB85_FRAM_Class::getDevice(uint32_t &memAddress,uint32_t &endAddress){// Return device offset address     //
+  uint8_t  device       = 0;                                                  //                                  //
+  uint32_t startAddress = 0;                                                  //                                  //
+           endAddress   = UINT32_MAX;                                         // Start at max so adding 1 = 0     //
+  for(device=0;device<MB85_MAX_DEVICES;device++) {                            // Loop through all devices found   //
+    if(_I2C[device]) {                                                        // If there's a memory at address   //
+      startAddress = endAddress+1;                                            // Chip starts after previous end   //
+      endAddress  += (uint32_t)_I2C[device] * 1024;                           // Compute end of memory chip       //
+     if (endAddress>=memAddress) break;                                       // Exit if we are in range          //
+     memAddress  -= (uint32_t)_I2C[device] * 1024;                            // adjust memory address            //
+    } // of if we have a device at address                                    //                                  //
+  } // of for-next all possible devices                                       //                                  //
+  return device;                                                              //                                  //
+} // of internal method getDevice()                                           //----------------------------------//
