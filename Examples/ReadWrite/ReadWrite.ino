@@ -90,7 +90,15 @@ void setup() {                                                                //
   Serial.println("\".");                                                      //                                  //
                                                                               //                                  //
   if (chips>1) {                                                              // Demonstrate overlapping memories //
-    Serial.println("\nMultiple memories found, demonstrating overlapping.");  //                                  //
+    Serial.println("\nMultiple memories found:");                             //                                  //
+    for (uint8_t i=0;i<chips;i++) {                                           // Display information for each mem //
+      Serial.print("Memory ");                                                //                                  //
+      Serial.print(i);                                                        //                                  //
+      Serial.print(" has ");                                                  //                                  //
+      Serial.print(FRAM.memSize(i));                                          //                                  //
+      Serial.println(" bytes.");                                              //                                  //
+    } // for-next each memory chip found                                      //                                  //
+    Serial.println("\nDemonstrating overlapping.");                           //                                  //
     Serial.println("Assuming first memory is a 32Kb memory.");                //                                  //
     uint32_t memAddress = 32768;                                              // Change here if chip is different //
     FRAM.write(memAddress-6,testArray);                                       // Split test across 2 chips        //
