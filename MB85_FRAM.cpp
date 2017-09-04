@@ -60,6 +60,7 @@ uint8_t MB85_FRAM_Class::begin() {                                            //
         uint8_t newMinimumByte = Wire.read();                                 // Store value of byte 0            //
         if(newMinimumByte!=0x00) {                                            // If the value has changed         //
           _I2C[i-MB85_MIN_ADDRESS] = memSize/1024;                            // Store memory size in kB          //
+          _TotalMemory += memSize;                                            // Add value to total               //
           Wire.beginTransmission(i);                                          // Start transmission               //
           Wire.write((uint8_t)0);Wire.write((uint8_t)0);                      // Position to address 0            //
           Wire.write(minimumByte);                                            // restore original value           //
@@ -84,9 +85,7 @@ uint8_t MB85_FRAM_Class::begin() {                                            //
 ** Method totalBytes() returns the sum of all the memories found                                                  **
 *******************************************************************************************************************/
 uint32_t MB85_FRAM_Class::totalBytes() {                                      // Return total memory found        //
-  uint32_t bytesFound = 0;                                                    // Initialize return variable       //
-  for(uint8_t i=0;i<MB85_MAX_DEVICES;i++) bytesFound += _I2C[i];              // Sum up the the kilobytes         //
-  return(bytesFound*1024);                                                    // return total bytes               //
+  return(_TotalMemory);                                                       // return total bytes               //
 } // of method totalBytes()                                                   //----------------------------------//
 
 /*******************************************************************************************************************

@@ -3,7 +3,6 @@
 ** at http://www.fujitsu.com/global/products/devices/semiconductor/memory/fram/lineup/index.html and the list is  **
 ** detailed below:                                                                                                **
 **                                                                                                                **
-** MB85RC1MT    1Mbit (128K x 8bit) ManufacturerID 0x00A, Product ID = 0x758 (Density = 0x7)        (unsupported) **
 ** MB85RC512T 512Kbit ( 64K x 8bit) ManufacturerID 0x00A, Product ID = 0x658 (Density = 0x6)                      **
 ** MB85RC256V 256Kbit ( 32K x 8bit) ManufacturerID 0x00A, Product ID = 0x510 (Density = 0x5)                      **
 ** MB85RC128A 128Kbit ( 16K x 8bit) No ManufacturerID/productID or Density values                                 **
@@ -11,6 +10,7 @@
 ** MB85RC64A   64Kbit (  8K x 8bit) No ManufacturerID/productID or Density values                                 **
 ** MB85RC64V   64Kbit (  8K x 8bit) No ManufacturerID/productID or Density values                                 **
 ** - unsupported memories --                                                                                      **
+** MB85RC1MT    1Mbit (128K x 8bit) ManufacturerID 0x00A, Product ID = 0x758 (Density = 0x7)        (unsupported) **
 ** MB85RC16    16Kbit (  2K x 8bit) No ManufacturerID/productID or Density values  1 Address byte   (unsupported) **
 ** MB85RC16V   16Kbit (  2K x 8bit) No ManufacturerID/productID or Density values  1 Address byte   (unsupported) **
 ** MB85RC04V    4Kbit ( 512 x 8bit) No ManufacturerID/productID or Density values  1 Address byte   (unsupported) **
@@ -34,6 +34,7 @@
 **                                                                                                                **
 ** Vers.  Date       Developer                     Comments                                                       **
 ** ====== ========== ============================= ============================================================== **
+** 1.0.0b 2017-09-04 https://github.com/SV-Zanshin Prepared for release, final testing                            **
 ** 1.0.0a 2017-08-27 https://github.com/SV-Zanshin Started coding                                                 **
 **                                                                                                                **
 *******************************************************************************************************************/
@@ -48,10 +49,6 @@
   const uint8_t MB85_MAX_DEVICES        =    8;                               // Maximum number of FRAM devices   //
 
   /*****************************************************************************************************************
-  ** Declare enumerated types used in the class                                                                   **
-  *****************************************************************************************************************/
-  
-  /*****************************************************************************************************************
   ** Main MB85_FRAM class for the temperature / humidity / pressure sensor                                        **
   *****************************************************************************************************************/
   class MB85_FRAM_Class {                                                     // Class definition                 //
@@ -60,7 +57,7 @@
       ~MB85_FRAM_Class();                                                     // Class destructor                 //
       uint8_t begin();                                                        // Start using I2C Communications   //
       uint32_t totalBytes();                                                  // Return the total memory available//
-      uint16_t memSize(const uint8_t memNumber);                              // Return memory size in bytes //
+      uint16_t memSize(const uint8_t memNumber);                              // Return memory size in bytes      //
       /*************************************************************************************************************
       ** Declare the read and write methods as template functions. All device I/O is done through these two       **
       ** functions. If multiple memories have been found they are treated as if they were just one large memory,  **
@@ -72,7 +69,7 @@
       template< typename T > uint8_t &read(const uint32_t addr,T &value) {    // method to read a structure       //
         uint8_t* bytePtr      = (uint8_t*)&value;                             // Pointer to structure beginning   //
         uint8_t  structSize   = sizeof(T);                                    // Number of bytes in structure     //
-        uint32_t memAddress   = addr;                                         // Make working copy of address     //
+        uint32_t memAddress   = addr%_TotalMemory;                            // Ensure no value greater than max //
         uint32_t endAddress   = 0;                                            // Last address on current memory   //
         uint8_t device        = getDevice(memAddress,endAddress);             // Compute the actual device to use //
         Wire.beginTransmission(device+MB85_MIN_ADDRESS);                      // Address the I2C device           //
@@ -103,7 +100,7 @@
       template<typename T>uint8_t &write(const uint32_t addr,const T &value) {// method to write a structure      //
         const uint8_t* bytePtr = (const uint8_t*)&value;                      // Pointer to structure beginning   //
         uint8_t  structSize   = sizeof(T);                                    // Number of bytes in structure     //
-        uint32_t memAddress   = addr;                                         // Make working copy of address     //
+        uint32_t memAddress   = addr%_TotalMemory;                            // Ensure no value greater than max //
         uint32_t endAddress   = 0;                                            // Last address on current memory   //
         uint8_t device        = getDevice(memAddress,endAddress);             // Compute the actual device to use //
         Wire.beginTransmission(device+MB85_MIN_ADDRESS);                      // Address the I2C device           //
@@ -130,8 +127,9 @@
       } // of method write()                                                  //----------------------------------//
     private:                                                                  // -------- Private methods ------- //
       uint8_t getDevice(uint32_t &memAddress, uint32_t &endAddress);          // Compute actual device to use     //
-      uint8_t _DeviceCount           =   0;                                   // Number of memories found         //
-      uint8_t _I2C[MB85_MAX_DEVICES] = {0};                                   // List of device kB capacities     //
-      bool     _TransmissionStatus   = false;                                 // I2C communications status        //
+      uint8_t  _DeviceCount           =     0;                                // Number of memories found         //
+      uint32_t _TotalMemory           =     0;                                // Number of bytes in total         //
+      uint8_t  _I2C[MB85_MAX_DEVICES] =   {0};                                // List of device kB capacities     //
+      bool     _TransmissionStatus    = false;                                // I2C communications status        //
   }; // of MB85_FRAM class definition                                         //                                  //
 #endif                                                                        //----------------------------------//
