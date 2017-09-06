@@ -34,6 +34,7 @@
 **                                                                                                                **
 ** Vers.  Date       Developer                     Comments                                                       **
 ** ====== ========== ============================= ============================================================== **
+** 1.0.1b 2017-09-06 https://github.com/SV-Zanshin Allow structures > 32 bytes, optimized memory use              **
 ** 1.0.0b 2017-09-04 https://github.com/SV-Zanshin Prepared for release, final testing                            **
 ** 1.0.0a 2017-08-27 https://github.com/SV-Zanshin Started coding                                                 **
 **                                                                                                                **
@@ -58,6 +59,7 @@
       uint8_t begin();                                                        // Start using I2C Communications   //
       uint32_t totalBytes();                                                  // Return the total memory available//
       uint16_t memSize(const uint8_t memNumber);                              // Return memory size in bytes      //
+
       /*************************************************************************************************************
       ** Declare the read and write methods as template functions. All device I/O is done through these two       **
       ** functions. If multiple memories have been found they are treated as if they were just one large memory,  **
@@ -71,41 +73,40 @@
         uint8_t  structSize   = sizeof(T);                                    // Number of bytes in structure     //
         uint32_t memAddress   = addr%_TotalMemory;                            // Ensure no value greater than max //
         uint32_t endAddress   = 0;                                            // Last address on current memory   //
-        uint8_t device        = getDevice(memAddress,endAddress);             // Compute the actual device to use //
-        Wire.beginTransmission(device+MB85_MIN_ADDRESS);                      // Address the I2C device           //
-        Wire.write(memAddress>>8);                                            // Send MSB register address        //
-        Wire.write((uint8_t)memAddress);                                      // Send LSB address to read         //
-        _TransmissionStatus = Wire.endTransmission();                         // Close transmission               //
-        Wire.requestFrom(device+MB85_MIN_ADDRESS, sizeof(T));                 // Request n-bytes of data          //
-        structSize = Wire.available();                                        // Use the actual number of bytes   //
+        uint8_t  device       = getDevice(memAddress,endAddress);             // Compute the actual device to use //
+        uint8_t  bufferPos    = 0;                                            // Buffer is limited to BUFFER_SIZE //
+        requestI2C(device,memAddress,sizeof(T),true);                         // Get bytes from memory            //
         for (uint8_t i=0;i<structSize;i++) {                                  // loop for each byte to be read    //
           *bytePtr++ = Wire.read();                                           // Put byte read to pointer address //
+          bufferPos++;                                                        // Increment the buffer pointer     //
           if(memAddress++==endAddress) {                                      // If we've reached the end-of-chip //
             for(uint8_t j=0;j<MB85_MAX_DEVICES;j++) {                         // loop to get the next device      //
               if (device++==MB85_MAX_DEVICES) device = 0;                     // Increment device or start at 0   //
               if (_I2C[device]) {                                             // On a match, address device       //
-                Wire.beginTransmission(device+MB85_MIN_ADDRESS);              // Address the I2C device           //
-                Wire.write((uint8_t)0);                                       // Send MSB register address        //
-                Wire.write((uint8_t)0);                                       // Send LSB address to read         //
-                _TransmissionStatus = Wire.endTransmission();                 // Close transmission               //
-                Wire.requestFrom(device+MB85_MIN_ADDRESS, sizeof(T));         // Request n-bytes of data          //
+                requestI2C(device,0,sizeof(T),true);                          // Get bytes from new memory chip   //
                 memAddress = 1;                                               // New memory address               //
+                bufferPos  = 0;                                               // read buffer is empty again       //
                 break;                                                        // And stop looking for a new memory//
               } // of if we've got the next memory                            //                                  //
             } // of for-next loop through each device                         //                                  //
           } // of if-then we've reached the end of the physical memory        //                                  //
+          if(bufferPos==BUFFER_LENGTH) {                                      // If the buffer is full, then we   //
+            bufferPos = 0;                                                    // Reset the buffer position        //
+            requestI2C(device,memAddress,sizeof(T),true);                     // Get bytes from memory            //
+            structSize = Wire.available();                                    // Use the actual number of bytes   //
+            bufferPos  = 0;                                                   // Reset the buffer position        //
+          } // if our read buffer is full                                     //                                  //
         } // of loop for each byte //                                         //                                  //
         return(structSize);                                                   // return the number of bytes read  //
       } // of method read()                                                   //----------------------------------//
+
       template<typename T>uint8_t &write(const uint32_t addr,const T &value) {// method to write a structure      //
         const uint8_t* bytePtr = (const uint8_t*)&value;                      // Pointer to structure beginning   //
         uint8_t  structSize   = sizeof(T);                                    // Number of bytes in structure     //
         uint32_t memAddress   = addr%_TotalMemory;                            // Ensure no value greater than max //
         uint32_t endAddress   = 0;                                            // Last address on current memory   //
         uint8_t device        = getDevice(memAddress,endAddress);             // Compute the actual device to use //
-        Wire.beginTransmission(device+MB85_MIN_ADDRESS);                      // Address the I2C device           //
-        Wire.write(memAddress>>8);                                            // Send MSB register address        //
-        Wire.write((uint8_t)memAddress);                                      // Send LSB address to read         //
+        requestI2C(device,memAddress,sizeof(T),false);                        // Position memory pointer          //
         for (uint8_t i=0;i<sizeof(T);i++) {                                   // loop for each byte to be written //
           Wire.write(*bytePtr++);                                             // Write current byte to memory     //
           if(memAddress++==endAddress) {                                      // If we've reached the end-of-chip //
@@ -113,9 +114,7 @@
             for(uint8_t j=0;j<MB85_MAX_DEVICES;j++) {                         // loop to get the next device      //
               if (device++==MB85_MAX_DEVICES) device = 0;                     // Increment device or start at 0   //
               if (_I2C[device]) {                                             // On a match, address device       //
-                Wire.beginTransmission(device+MB85_MIN_ADDRESS);              // Address the I2C device           //
-                Wire.write((uint8_t)0);                                       // Send MSB register address        //
-                Wire.write((uint8_t)0);                                       // Send LSB address to read         //
+                requestI2C(device,0,sizeof(T),false);                         // Position memory pointer to begin //
                 memAddress = 1;                                               // New memory address               //
                 break;                                                        // And stop looking for a new memory//
               } // of if we've got the next memory                            //                                  //
@@ -127,6 +126,8 @@
       } // of method write()                                                  //----------------------------------//
     private:                                                                  // -------- Private methods ------- //
       uint8_t getDevice(uint32_t &memAddress, uint32_t &endAddress);          // Compute actual device to use     //
+      void    requestI2C(const uint8_t device,const uint32_t memAddress,      // Address device and request data  //
+                         const uint16_t dataSize, const bool endTrans);       //                                  //
       uint8_t  _DeviceCount           =     0;                                // Number of memories found         //
       uint32_t _TotalMemory           =     0;                                // Number of bytes in total         //
       uint8_t  _I2C[MB85_MAX_DEVICES] =   {0};                                // List of device kB capacities     //

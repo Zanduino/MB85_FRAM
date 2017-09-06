@@ -113,3 +113,20 @@ uint8_t MB85_FRAM_Class::getDevice(uint32_t &memAddress,uint32_t &endAddress){//
 uint16_t MB85_FRAM_Class::memSize(const uint8_t memNumber) {                  // Return memory size in bytes      //
    if(memNumber<=_DeviceCount) return(_I2C[memNumber]*1024); else return 0;   // Return appropriate value         //
 } // of method memSize()                                                      //----------------------------------//   
+
+/*******************************************************************************************************************
+** Method requestI2C() is an internal call used in the read() template to send the 2 byte address and request a   **
+** number of bytes to be read from that address                                                                   **
+*******************************************************************************************************************/
+void MB85_FRAM_Class::requestI2C(const uint8_t device,const uint32_t memAddr, // Address device and request data  //
+                                 const uint16_t dataSize,const bool endTrans){//                                  //
+  Wire.beginTransmission(device+MB85_MIN_ADDRESS);                            // Address the I2C device           //
+  Wire.write(memAddr>>8);                                                     // Send MSB register address        //
+  Wire.write((uint8_t)memAddr);                                               // Send LSB address to read         //
+  if (endTrans) {                                                             // Read request, so end transmission//
+    _TransmissionStatus = Wire.endTransmission();                             // Close transmission               //
+    Wire.requestFrom(device+MB85_MIN_ADDRESS, dataSize);                      // Request n-bytes of data          //
+    return Wire.available();                                                  // Return actual bytes read         //
+  } // of if-then endTransmission switch is set                               //                                  //
+  return dataSize;                                                            // Return the dataSize on write     //
+} // of internal method requestI2C()                                          //----------------------------------//
