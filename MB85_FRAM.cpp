@@ -73,7 +73,10 @@ uint8_t MB85_FRAM_Class::begin() {                                            //
           Wire.write(maximumByte);                                            // restore original value           //
           _TransmissionStatus = Wire.endTransmission();                       // Close transmission               //
         } // of if-then-else we've got a wraparound                           //                                  //
-        if (!_I2C[i-MB85_MIN_ADDRESS]) _I2C[i-MB85_MIN_ADDRESS] = 32;         // If none of the above, then 32kB  //
+        if (!_I2C[i-MB85_MIN_ADDRESS]) {                                      // If none of the above, then 32kB  //
+          _I2C[i-MB85_MIN_ADDRESS] = 32;                                      // Set array value                  //
+          _TotalMemory += 32768;                                              // Add value to total               //
+         } // of if-then we have the biggest memory                           //                                  //          
       } // of for-next loop for each memory size                              //                                  //
       _DeviceCount++;                                                         // Increment the found count        //
     } // of if-then we have found a device                                    //                                  //
@@ -85,7 +88,7 @@ uint8_t MB85_FRAM_Class::begin() {                                            //
 ** Method totalBytes() returns the sum of all the memories found                                                  **
 *******************************************************************************************************************/
 uint32_t MB85_FRAM_Class::totalBytes() {                                      // Return total memory found        //
-  return(_TotalMemory);                                                       // return total bytes               //
+  return _TotalMemory;                                                        // return total bytes               //
 } // of method totalBytes()                                                   //----------------------------------//
 
 /*******************************************************************************************************************
@@ -110,6 +113,7 @@ uint8_t MB85_FRAM_Class::getDevice(uint32_t &memAddress,uint32_t &endAddress){//
 /*******************************************************************************************************************
 ** Method memSize() returns the device's size in Kb                                                               **
 *******************************************************************************************************************/
-uint16_t MB85_FRAM_Class::memSize(const uint8_t memNumber) {                  // Return memory size in bytes      //
-   if(memNumber<=_DeviceCount) return(_I2C[memNumber]*1024); else return 0;   // Return appropriate value         //
+uint32_t MB85_FRAM_Class::memSize(const uint8_t memNumber) {                  // Return memory size in bytes      //
+  if(memNumber<=_DeviceCount) return((uint32_t)_I2C[memNumber]*1024);         // Return either memory size or the //
+                         else return 0;                                       // value of zero                    //
 } // of method memSize()                                                      //----------------------------------//   

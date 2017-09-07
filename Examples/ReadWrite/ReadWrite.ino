@@ -82,7 +82,7 @@ void setup() {                                                                //
   } // of for-next loop                                                       //                                  //
                                                                               //                                  //
   Serial.println("Writing array to memory.");                                 //                                  //
-  char testArray[13] = "Hello World!";                                        //                                  //
+  char testArray[13] = "Hello Borld!";                                        //                                  //
   FRAM.write(200,testArray);                                                  //                                  //
   FRAM.read(200,testArray);                                                   //                                  //
   Serial.print("Read string array as \"");                                    //                                  //
@@ -99,7 +99,8 @@ void setup() {                                                                //
       Serial.println(" bytes.");                                              //                                  //
     } // for-next each memory chip found                                      //                                  //
     Serial.println("\nDemonstrating memory overlapping.");                    //                                  //
-    uint32_t memAddress = FRAM.memSize(0)*1024;                               // Set to beginning of 2nd memory   //
+    uint32_t memAddress = FRAM.memSize(0);                                    // Set to beginning of 2nd memory   //
+Serial.println(memAddress);
     FRAM.write(memAddress-6,testArray);                                       // Split test string across 2 chips //
     Serial.println("Splitting text write across 2 memory chips.");            //                                  //
     Serial.print("Reading from memory chip 2 gives text \"");                 //                                  //
