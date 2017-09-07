@@ -104,6 +104,7 @@ uint8_t MB85_FRAM_Class::getDevice(uint32_t &memAddress,uint32_t &endAddress){//
      memAddress  -= (uint32_t)_I2C[device] * 1024;                            // adjust memory address            //
     } // of if we have a device at address                                    //                                  //
   } // of for-next all possible devices                                       //                                  //
+Serial.print("memAddress is now ");Serial.println(memAddress);
   return device;                                                              //                                  //
 } // of internal method getDevice()                                           //----------------------------------//
 
