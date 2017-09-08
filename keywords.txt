@@ -15,6 +15,7 @@ read	KEYWORD2
 write	KEYWORD2
 totalBytes	KEYWORD2
 memSize	KEYWORD2
+fillMemory	KEYWORD2
 
 ########################
 # Constants (LITERAL1) #
