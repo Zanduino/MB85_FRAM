@@ -74,9 +74,9 @@ uint8_t MB85_FRAM_Class::begin() {                                            //
           _TransmissionStatus = Wire.endTransmission();                       // Close transmission               //
         } // of if-then-else we've got a wraparound                           //                                  //
         if (!_I2C[i-MB85_MIN_ADDRESS]) {                                      // If none of the above, then 32kB  //
-          _I2C[i-MB85_MIN_ADDRESS] = 32;                                      // Set array value                  //
+          _I2C[i-MB85_MIN_ADDRESS] = 32;                                      // Set array size                   //
           _TotalMemory += 32768;                                              // Add value to total               //
-         } // of if-then we have the biggest memory                           //                                  //          
+        } // of if-then max memory                                            //                                  //
       } // of for-next loop for each memory size                              //                                  //
       _DeviceCount++;                                                         // Increment the found count        //
     } // of if-then we have found a device                                    //                                  //
@@ -117,3 +117,20 @@ uint32_t MB85_FRAM_Class::memSize(const uint8_t memNumber) {                  //
   if(memNumber<=_DeviceCount) return((uint32_t)_I2C[memNumber]*1024);         // Return either memory size or the //
                          else return 0;                                       // value of zero                    //
 } // of method memSize()                                                      //----------------------------------//   
+
+/*******************************************************************************************************************
+** Method requestI2C() is an internal call used in the read() template to send the 2 byte address and request a   **
+** number of bytes to be read from that address                                                                   **
+*******************************************************************************************************************/
+void MB85_FRAM_Class::requestI2C(const uint8_t device,const uint32_t memAddr, // Address device and request data  //
+                                 const uint16_t dataSize,const bool endTrans){//                                  //
+  Wire.beginTransmission(device+MB85_MIN_ADDRESS);                            // Address the I2C device           //
+  Wire.write(memAddr>>8);                                                     // Send MSB register address        //
+  Wire.write((uint8_t)memAddr);                                               // Send LSB address to read         //
+  if (endTrans) {                                                             // Read request, so end transmission//
+    _TransmissionStatus = Wire.endTransmission();                             // Close transmission               //
+    Wire.requestFrom(device+MB85_MIN_ADDRESS, dataSize);                      // Request n-bytes of data          //
+    return Wire.available();                                                  // Return actual bytes read         //
+  } // of if-then endTransmission switch is set                               //                                  //
+  return dataSize;                                                            // Return the dataSize on write     //
+} // of internal method requestI2C()                                          //----------------------------------//

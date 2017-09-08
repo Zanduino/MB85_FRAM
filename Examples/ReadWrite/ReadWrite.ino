@@ -25,7 +25,8 @@
 **                                                                                                                **
 ** What sets this library apart is that it will autmatically detect up to 8 memories, in any combination of those **
 ** listed as supported above, and treats them as one contiguous block of memory. The read() and write() functions **
-** also support structures and arrays.                                                                            **
+** also support structures and arrays. Although the internal I2C library has a 32 byte limitation on the buffer   **
+** size, the library allows for larger structures to be read and written.                                         **
 **                                                                                                                **
 ** This program is free software: you can redistribute it and/or modify it under the terms of the GNU General     **
 ** Public License as published by the Free Software Foundation, either version 3 of the License, or (at your      **
@@ -100,7 +101,6 @@ void setup() {                                                                //
     } // for-next each memory chip found                                      //                                  //
     Serial.println("\nDemonstrating memory overlapping.");                    //                                  //
     uint32_t memAddress = FRAM.memSize(0);                                    // Set to beginning of 2nd memory   //
-Serial.println(memAddress);
     FRAM.write(memAddress-6,testArray);                                       // Split test string across 2 chips //
     Serial.println("Splitting text write across 2 memory chips.");            //                                  //
     Serial.print("Reading from memory chip 2 gives text \"");                 //                                  //
