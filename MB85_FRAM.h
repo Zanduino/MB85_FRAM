@@ -120,6 +120,7 @@
         _TransmissionStatus = Wire.endTransmission();                         // Close transmission               //
         return(structSize);                                                   // return number of bytes written   //
       } // of method write()                                                  //----------------------------------//
+      
     private:                                                                  // -------- Private methods ------- //
       uint8_t getDevice(uint32_t &memAddress, uint32_t &endAddress);          // Compute actual device to use     //
       void    requestI2C(const uint8_t device,const uint32_t memAddress,      // Address device and request data  //
