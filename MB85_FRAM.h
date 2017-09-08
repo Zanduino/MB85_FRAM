@@ -34,6 +34,7 @@
 **                                                                                                                **
 ** Vers.  Date       Developer                     Comments                                                       **
 ** ====== ========== ============================= ============================================================== **
+** 1.0.2a 2017-09-06 https://github.com/SV-Zanshin Added fillMemory() function as a template                      **
 ** 1.0.1  2017-09-06 https://github.com/SV-Zanshin Completed testing for large structures                         **
 ** 1.0.1b 2017-09-06 https://github.com/SV-Zanshin Allow structures > 32 bytes, optimized memory use              **
 ** 1.0.0b 2017-09-04 https://github.com/SV-Zanshin Prepared for release, final testing                            **
@@ -61,12 +62,13 @@
       uint32_t totalBytes();                                                  // Return the total memory available//
       uint32_t memSize(const uint8_t memNumber);                              // Return memory size in bytes      //
       /*************************************************************************************************************
-      ** Declare the read and write methods as template functions. All device I/O is done through these two       **
-      ** functions. If multiple memories have been found they are treated as if they were just one large memory,  **
-      ** the read and write methods take care of calls that span multiple devices. The two functions are declared **
-      ** as template functions and thus need to be defined in this header rather than in the function body.       **
-      ** As templates they determine the size of structure to be read or written at compile time. Both return the **
-      ** data structure's size in bytes.                                                                          **
+      ** Declare the read method as a template function, this needs to be done in the header file rather than by  **
+      ** declaring the prototype here and putting the body into the cpp library file. All reading is done through **
+      ** this function. Multiple memories are treated as if they were one large memory, the space is contiguous   **
+      ** and a read will wrap around from the end of memory to the beginning. The function can be called with any **
+      ** type of argument as the "&value", including arrays and structures. Although the I2C "wire" has a 32 byte **
+      ** buffer limit, this library will automatically split bigger reads into multiple calls. The size of the    **
+      ** "&value" parameter is returned as the optional function value                                            **
       *************************************************************************************************************/
       template< typename T > uint8_t &read(const uint32_t addr,T &value) {    // method to read a structure       //
         uint8_t* bytePtr      = (uint8_t*)&value;                             // Pointer to structure beginning   //
@@ -92,7 +94,16 @@
         } // of loop for each byte //                                         //                                  //
         return(structSize);                                                   // return the number of bytes read  //
       } // of method read()                                                   //----------------------------------//
-
+      
+      /*************************************************************************************************************
+      ** Declare the write method as a template function, this needs to be done in the header file rather than by **
+      ** declaring the prototype here and putting the body into the cpp library file. All writing is done through **
+      ** this function. Multiple memories are treated as if they were one large memory, the space is contiguous   **
+      ** and a write will wrap around from the end of memory to the beginning. The function can be called with    **
+      ** any type of argument as the "&value", including arrays and structures. Although the I2C "wire" has a 32  **
+      ** byte buffer limit, this library will automatically split bigger writes into multiple calls. The size of  **
+      ** the "&value" parameter is returned as the optional function value                                        **
+      *************************************************************************************************************/
       template<typename T>uint8_t &write(const uint32_t addr,const T &value) {// method to write a structure      //
         const uint8_t* bytePtr = (const uint8_t*)&value;                      // Pointer to structure beginning   //
         uint8_t  structSize   = sizeof(T);                                    // Number of bytes in structure     //
@@ -120,6 +131,18 @@
         _TransmissionStatus = Wire.endTransmission();                         // Close transmission               //
         return(structSize);                                                   // return number of bytes written   //
       } // of method write()                                                  //----------------------------------//
+      
+      /*************************************************************************************************************
+      ** Declare the fillMemory() method to write as many copies of the "&value" parameter as will fit into the   **
+      ** the available memory space. The bigger the "&value" datatype is, the faster this call will function. Any **
+      ** extra bytes left over if the memory is not divisible by the length of the "&data" is left untouched.     **
+      *************************************************************************************************************/
+      template<typename T>uint32_t &fillMemory(const T &value) {              // Fill memory with repeated values //
+        uint8_t  structSize = sizeof(T);                                      // Number of bytes in structure     //
+        uint32_t i;                                                           // Declare loop counter and return  //
+        for(i=0;i<(_TotalMemory/structSize);i++) write(i*structSize,value);   // Loop number of times that it fits//
+        return i;                                                             // return the number of copies made //
+      } // of method fillMemory()                                             //----------------------------------//
       
     private:                                                                  // -------- Private methods ------- //
       uint8_t getDevice(uint32_t &memAddress, uint32_t &endAddress);          // Compute actual device to use     //

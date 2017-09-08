@@ -13,6 +13,7 @@
                                                                               //----------------------------------//
 MB85_FRAM_Class::MB85_FRAM_Class()  {}                                        // Empty & unused class constructor //
 MB85_FRAM_Class::~MB85_FRAM_Class() {}                                        // Empty & unused class destructor  //
+uint32_t MB85_FRAM_Class::totalBytes() {return _TotalMemory;}                 // return internal variable         //
 /*******************************************************************************************************************
 ** Method begin starts communications with the device. There are 4 possible memory sizes, 8kB, 16kB, 32kB, and    **
 ** 64kB and this function will automatically determine the size of each memory found. The memories will wrap      **
@@ -85,13 +86,6 @@ uint8_t MB85_FRAM_Class::begin() {                                            //
 } // of method begin()                                                        //----------------------------------//
 
 /*******************************************************************************************************************
-** Method totalBytes() returns the sum of all the memories found                                                  **
-*******************************************************************************************************************/
-uint32_t MB85_FRAM_Class::totalBytes() {                                      // Return total memory found        //
-  return _TotalMemory;                                                        // return total bytes               //
-} // of method totalBytes()                                                   //----------------------------------//
-
-/*******************************************************************************************************************
 ** Method getDevice() is an internal call used in the read() and write() templates to compute which memory to     **
 ** use for a given memory address                                                                                 **
 *******************************************************************************************************************/
@@ -116,11 +110,12 @@ uint8_t MB85_FRAM_Class::getDevice(uint32_t &memAddress,uint32_t &endAddress){//
 uint32_t MB85_FRAM_Class::memSize(const uint8_t memNumber) {                  // Return memory size in bytes      //
   if(memNumber<=_DeviceCount) return((uint32_t)_I2C[memNumber]*1024);         // Return either memory size or the //
                          else return 0;                                       // value of zero                    //
-} // of method memSize()                                                      //----------------------------------//   
+} // of method memSize()                                                      //----------------------------------//
 
 /*******************************************************************************************************************
 ** Method requestI2C() is an internal call used in the read() template to send the 2 byte address and request a   **
-** number of bytes to be read from that address                                                                   **
+** number of bytes to be read from that address. The "endTrans" parameter specified whether or not to end the     **
+** transmission. If specified then it is a read call, otherwise it is a write and the data follows                **
 *******************************************************************************************************************/
 void MB85_FRAM_Class::requestI2C(const uint8_t device,const uint32_t memAddr, // Address device and request data  //
                                  const uint16_t dataSize,const bool endTrans){//                                  //

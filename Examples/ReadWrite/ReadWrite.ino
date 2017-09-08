@@ -83,7 +83,7 @@ void setup() {                                                                //
   } // of for-next loop                                                       //                                  //
                                                                               //                                  //
   Serial.println("Writing array to memory.");                                 //                                  //
-  char testArray[13] = "Hello Borld!";                                        //                                  //
+  char testArray[13] = "Hello World!";                                        //                                  //
   FRAM.write(200,testArray);                                                  //                                  //
   FRAM.read(200,testArray);                                                   //                                  //
   Serial.print("Read string array as \"");                                    //                                  //
@@ -103,6 +103,7 @@ void setup() {                                                                //
     uint32_t memAddress = FRAM.memSize(0);                                    // Set to beginning of 2nd memory   //
     FRAM.write(memAddress-6,testArray);                                       // Split test string across 2 chips //
     Serial.println("Splitting text write across 2 memory chips.");            //                                  //
+    Serial.println("Writing string array at end of memory chip 1");           //                                  //
     Serial.print("Reading from memory chip 2 gives text \"");                 //                                  //
     FRAM.read(memAddress,testArray);                                          // Read array from 2nd memory       //
     Serial.print(testArray);                                                  //                                  //
