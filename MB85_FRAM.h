@@ -34,6 +34,7 @@
 **                                                                                                                **
 ** Vers.  Date       Developer                     Comments                                                       **
 ** ====== ========== ============================= ============================================================== **
+** 1.0.1  2017-09-06 https://github.com/SV-Zanshin Completed testing for large structures                         **
 ** 1.0.1b 2017-09-06 https://github.com/SV-Zanshin Allow structures > 32 bytes, optimized memory use              **
 ** 1.0.0b 2017-09-04 https://github.com/SV-Zanshin Prepared for release, final testing                            **
 ** 1.0.0a 2017-08-27 https://github.com/SV-Zanshin Started coding                                                 **
@@ -75,15 +76,15 @@
         uint32_t endAddress   = 0;                                            // Last address on current memory   //
         uint8_t  device       = getDevice(memAddress,endAddress);             // Compute the actual device to use //
         for (uint8_t i=0;i<structSize;i++) {                                  // loop for each byte to be read    //
-          if(i%BUFFER_LENGTH==0) {                                            // If the buffer is full, then we   //
-            requestI2C(device,memAddress,sizeof(T),true);                     // Get data from memory             //
+          if(i%(BUFFER_LENGTH-2)==0) {                                        // If the buffer is full, then we   //
+            requestI2C(device,memAddress,structSize,true);                    // Get data from memory             //
           } // if our read buffer is full                                     //                                  //
           *bytePtr++ = Wire.read();                                           // Put byte read to pointer address //
           if(memAddress++==endAddress) {                                      // If we've reached the end-of-chip //
             for(uint8_t j=0;j<MB85_MAX_DEVICES;j++) {                         // loop to get the next device      //
               if (device++==MB85_MAX_DEVICES) device = 0;                     // Increment device or start at 0   //
               if (_I2C[device]) {                                             // On a match, address device       //
-                requestI2C(device,0,sizeof(T),true);                          // Get bytes from new memory chip   //
+                requestI2C(device,0,structSize,true);                         // Get bytes from new memory chip   //
                 memAddress = 0;                                               // New memory address               //
                 break;                                                        // And stop looking for a new memory//
               } // of if we've got the next memory                            //                                  //
@@ -99,18 +100,18 @@
         uint32_t memAddress   = addr%_TotalMemory;                            // Ensure no value greater than max //
         uint32_t endAddress   = 0;                                            // Last address on current memory   //
         uint8_t device        = getDevice(memAddress,endAddress);             // Compute the actual device to use //
-        for (uint8_t i=0;i<sizeof(T);i++) {                                   // loop for each byte to be written //
-          if(i%BUFFER_LENGTH==0) {                                            // If the buffer is full, then we   //
-            _TransmissionStatus = Wire.endTransmission();                     // Close transmission               //
-            requestI2C(device,memAddress,sizeof(T),false);                    // Get data from memory             //
-          } // if our read buffer is full                                     //                                  //
+        for (uint8_t i=0;i<structSize;i++) {                                  // loop for each byte to be written //
+          if(i%(BUFFER_LENGTH-2)==0) {                                        // Check if end of buffer reached   //
+            if(i>0) _TransmissionStatus = Wire.endTransmission();             // Close active transmission        //
+            requestI2C(device,memAddress,structSize,false);                   // Position for next buffer data    //
+          } // if our write buffer is full                                    //                                  //
           Wire.write(*bytePtr++);                                             // Write current byte to memory     //
           if(memAddress++==endAddress) {                                      // If we've reached the end-of-chip //
             _TransmissionStatus = Wire.endTransmission();                     // Close transmission               //
             for(uint8_t j=0;j<MB85_MAX_DEVICES;j++) {                         // loop to get the next device      //
               if (device++==MB85_MAX_DEVICES) device = 0;                     // Increment device or start at 0   //
               if (_I2C[device]) {                                             // On a match, address device       //
-                requestI2C(device,0,sizeof(T),false);                         // Position memory pointer to begin //
+                requestI2C(device,0,structSize,false);                        // Position memory pointer to begin //
                 memAddress = 0;                                               // New memory address               //
                 break;                                                        // And stop looking for a new memory//
               } // of if we've got the next memory                            //                                  //

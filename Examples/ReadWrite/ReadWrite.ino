@@ -107,19 +107,6 @@ void setup() {                                                                //
     FRAM.read(memAddress,testArray);                                          // Read array from 2nd memory       //
     Serial.print(testArray);                                                  //                                  //
     Serial.println("\".");                                                    //                                  //
-
-Serial.println("Test big data strings");
-  char testArray2[65] = "123456789012345678901234567890123456789012345678901234567890abcd";
-  FRAM.write(0,testArray2);
-  Serial.print("Reading from memory chip 2 gives text \"");                 //                                  //
-  FRAM.read(5,testArray2);                                          // Read array from 2nd memory       //
-  Serial.print(testArray2);                                                  //                                  //
-
-
-
-
-
-
   } // of if-then-else we have more than one memory                           //                                  //
   Serial.println("\n\nFinished.");                                            //                                  //
 } // of method setup()                                                        //                                  //
@@ -128,12 +115,3 @@ Serial.println("Test big data strings");
 *******************************************************************************************************************/
 void loop() {                                                                 //                                  //
 } // of method loop()                                                         //----------------------------------//
-
-/*
-  uint32_t memAddress = FRAM.memSize(0)*1024;                               // Set to beginning of 2nd memory   //
-  char testArray2[64] = "1234567890123456789012345678901234567890123456789012345678901234";
-  FRAM.write(memAddress-50,testArray2);
-  Serial.print("Reading from memory chip 2 gives text \"");                 //                                  //
-  FRAM.read(memAddress,testArray);                                          // Read array from 2nd memory       //
-  Serial.print(testArray);                                                  //                                  //
-*/
