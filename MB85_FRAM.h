@@ -59,8 +59,7 @@
       ~MB85_FRAM_Class();                                                     // Class destructor                 //
       uint8_t begin();                                                        // Start using I2C Communications   //
       uint32_t totalBytes();                                                  // Return the total memory available//
-      uint16_t memSize(const uint8_t memNumber);                              // Return memory size in bytes      //
-
+      uint32_t memSize(const uint8_t memNumber);                              // Return memory size in bytes      //
       /*************************************************************************************************************
       ** Declare the read and write methods as template functions. All device I/O is done through these two       **
       ** functions. If multiple memories have been found they are treated as if they were just one large memory,  **

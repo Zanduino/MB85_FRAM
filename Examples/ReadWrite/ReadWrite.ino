@@ -83,7 +83,7 @@ void setup() {                                                                //
   } // of for-next loop                                                       //                                  //
                                                                               //                                  //
   Serial.println("Writing array to memory.");                                 //                                  //
-  char testArray[13] = "Hello World!";                                        //                                  //
+  char testArray[13] = "Hello Borld!";                                        //                                  //
   FRAM.write(200,testArray);                                                  //                                  //
   FRAM.read(200,testArray);                                                   //                                  //
   Serial.print("Read string array as \"");                                    //                                  //

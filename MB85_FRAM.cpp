@@ -113,9 +113,9 @@ uint8_t MB85_FRAM_Class::getDevice(uint32_t &memAddress,uint32_t &endAddress){//
 /*******************************************************************************************************************
 ** Method memSize() returns the device's size in Kb                                                               **
 *******************************************************************************************************************/
-uint16_t MB85_FRAM_Class::memSize(const uint8_t memNumber) {                  // Return memory size in bytes      //
-   if(memNumber<=_DeviceCount) return((uint32_t)_I2C[memNumber]*1024);        // Return appropriate value         //
-                          else return 0;                                      // or zero                          //
+uint32_t MB85_FRAM_Class::memSize(const uint8_t memNumber) {                  // Return memory size in bytes      //
+  if(memNumber<=_DeviceCount) return((uint32_t)_I2C[memNumber]*1024);         // Return either memory size or the //
+                         else return 0;                                       // value of zero                    //
 } // of method memSize()                                                      //----------------------------------//   
 
 /*******************************************************************************************************************
