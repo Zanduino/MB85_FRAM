@@ -74,29 +74,21 @@
         uint32_t memAddress   = addr%_TotalMemory;                            // Ensure no value greater than max //
         uint32_t endAddress   = 0;                                            // Last address on current memory   //
         uint8_t  device       = getDevice(memAddress,endAddress);             // Compute the actual device to use //
-        uint8_t  bufferPos    = 0;                                            // Buffer is limited to BUFFER_SIZE //
-        requestI2C(device,memAddress,sizeof(T),true);                         // Get bytes from memory            //
         for (uint8_t i=0;i<structSize;i++) {                                  // loop for each byte to be read    //
+          if(i%BUFFER_LENGTH==0) {                                            // If the buffer is full, then we   //
+            requestI2C(device,memAddress,sizeof(T),true);                     // Get data from memory             //
+          } // if our read buffer is full                                     //                                  //
           *bytePtr++ = Wire.read();                                           // Put byte read to pointer address //
-          bufferPos++;                                                        // Increment the buffer pointer     //
           if(memAddress++==endAddress) {                                      // If we've reached the end-of-chip //
             for(uint8_t j=0;j<MB85_MAX_DEVICES;j++) {                         // loop to get the next device      //
               if (device++==MB85_MAX_DEVICES) device = 0;                     // Increment device or start at 0   //
               if (_I2C[device]) {                                             // On a match, address device       //
-Serial.println("!");
                 requestI2C(device,0,sizeof(T),true);                          // Get bytes from new memory chip   //
-                memAddress = 1;                                               // New memory address               //
-                bufferPos  = 0;                                               // read buffer is empty again       //
+                memAddress = 0;                                               // New memory address               //
                 break;                                                        // And stop looking for a new memory//
               } // of if we've got the next memory                            //                                  //
             } // of for-next loop through each device                         //                                  //
           } // of if-then we've reached the end of the physical memory        //                                  //
-//          if(bufferPos==BUFFER_LENGTH) {                                      // If the buffer is full, then we   //
-//            bufferPos = 0;                                                    // Reset the buffer position        //
-//            requestI2C(device,memAddress,sizeof(T),true);                     // Get bytes from memory            //
-//            structSize = Wire.available();                                    // Use the actual number of bytes   //
-//            bufferPos  = 0;                                                   // Reset the buffer position        //
-//          } // if our read buffer is full                                     //                                  //
         } // of loop for each byte //                                         //                                  //
         return(structSize);                                                   // return the number of bytes read  //
       } // of method read()                                                   //----------------------------------//
@@ -104,21 +96,22 @@ Serial.println("!");
       template<typename T>uint8_t &write(const uint32_t addr,const T &value) {// method to write a structure      //
         const uint8_t* bytePtr = (const uint8_t*)&value;                      // Pointer to structure beginning   //
         uint8_t  structSize   = sizeof(T);                                    // Number of bytes in structure     //
-//        uint32_t memAddress   = addr%_TotalMemory;                            // Ensure no value greater than max //
-        uint32_t memAddress   = addr;                            // Ensure no value greater than max //
+        uint32_t memAddress   = addr%_TotalMemory;                            // Ensure no value greater than max //
         uint32_t endAddress   = 0;                                            // Last address on current memory   //
         uint8_t device        = getDevice(memAddress,endAddress);             // Compute the actual device to use //
-        requestI2C(device,memAddress,sizeof(T),false);                        // Position memory pointer          //
         for (uint8_t i=0;i<sizeof(T);i++) {                                   // loop for each byte to be written //
+          if(i%BUFFER_LENGTH==0) {                                            // If the buffer is full, then we   //
+            _TransmissionStatus = Wire.endTransmission();                     // Close transmission               //
+            requestI2C(device,memAddress,sizeof(T),false);                    // Get data from memory             //
+          } // if our read buffer is full                                     //                                  //
           Wire.write(*bytePtr++);                                             // Write current byte to memory     //
-Serial.print(memAddress);Serial.print(" ");Serial.println(endAddress);
           if(memAddress++==endAddress) {                                      // If we've reached the end-of-chip //
             _TransmissionStatus = Wire.endTransmission();                     // Close transmission               //
             for(uint8_t j=0;j<MB85_MAX_DEVICES;j++) {                         // loop to get the next device      //
               if (device++==MB85_MAX_DEVICES) device = 0;                     // Increment device or start at 0   //
               if (_I2C[device]) {                                             // On a match, address device       //
                 requestI2C(device,0,sizeof(T),false);                         // Position memory pointer to begin //
-                memAddress = 1;                                               // New memory address               //
+                memAddress = 0;                                               // New memory address               //
                 break;                                                        // And stop looking for a new memory//
               } // of if we've got the next memory                            //                                  //
             } // of for-next loop through each device                         //                                  //

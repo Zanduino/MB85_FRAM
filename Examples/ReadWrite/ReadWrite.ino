@@ -83,7 +83,7 @@ void setup() {                                                                //
   } // of for-next loop                                                       //                                  //
                                                                               //                                  //
   Serial.println("Writing array to memory.");                                 //                                  //
-  char testArray[13] = "Hello Borld!";                                        //                                  //
+  char testArray[13] = "Hello World!";                                        //                                  //
   FRAM.write(200,testArray);                                                  //                                  //
   FRAM.read(200,testArray);                                                   //                                  //
   Serial.print("Read string array as \"");                                    //                                  //
@@ -100,14 +100,26 @@ void setup() {                                                                //
       Serial.println(" bytes.");                                              //                                  //
     } // for-next each memory chip found                                      //                                  //
     Serial.println("\nDemonstrating memory overlapping.");                    //                                  //
-    uint16_t memAddress = FRAM.memSize(0);                                    // Set to beginning of 2nd memory   //
-Serial.print("Using memory size ");Serial.println(memAddress);
+    uint32_t memAddress = FRAM.memSize(0);                                    // Set to beginning of 2nd memory   //
     FRAM.write(memAddress-6,testArray);                                       // Split test string across 2 chips //
     Serial.println("Splitting text write across 2 memory chips.");            //                                  //
     Serial.print("Reading from memory chip 2 gives text \"");                 //                                  //
     FRAM.read(memAddress,testArray);                                          // Read array from 2nd memory       //
     Serial.print(testArray);                                                  //                                  //
     Serial.println("\".");                                                    //                                  //
+
+Serial.println("Test big data strings");
+  char testArray2[65] = "123456789012345678901234567890123456789012345678901234567890abcd";
+  FRAM.write(0,testArray2);
+  Serial.print("Reading from memory chip 2 gives text \"");                 //                                  //
+  FRAM.read(5,testArray2);                                          // Read array from 2nd memory       //
+  Serial.print(testArray2);                                                  //                                  //
+
+
+
+
+
+
   } // of if-then-else we have more than one memory                           //                                  //
   Serial.println("\n\nFinished.");                                            //                                  //
 } // of method setup()                                                        //                                  //
