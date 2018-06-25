@@ -32,4 +32,6 @@ Up to 8 devices can be put on an I2C and the library allows several memories to 
 
 See the [Wiki pages](https://github.com/SV-Zanshin/MB85_FRAM/wiki) for details of the class and the variables / functions accessible in it.
 
+[![DOI](https://www.zenodo.org/badge/101576520.svg)](https://www.zenodo.org/badge/latestdoi/101576520)
+
 ![Zanshin Logo](https://www.sv-zanshin.com/r/images/site/gif/zanshinkanjitiny.gif) <img src="https://www.sv-zanshin.com/r/images/site/gif/zanshintext.gif" width="75"/>
