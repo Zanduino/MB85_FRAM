@@ -23,8 +23,9 @@ uint32_t MB85_FRAM_Class::totalBytes() {return _TotalMemory;}                 //
 ** to 0xFF then we know we've had a wrap-around and have identified the chip, otherwise we repeat the procedure   **
 ** for the next possible memory size address and so on.                                                           **
 *******************************************************************************************************************/
-uint8_t MB85_FRAM_Class::begin() {                                            // Find I2C device                  //
+uint8_t MB85_FRAM_Class::begin(const uint16_t i2cSpeed) {                     // Find I2C device                  //
   Wire.begin();                                                               // Start I2C as master device       //
+  Wire.setClock(i2cSpeed);                                                    // Set the I2C bus speed            //
   for(uint8_t i=MB85_MIN_ADDRESS;i<MB85_MIN_ADDRESS+8;i++) {                  // loop all possible addresses      //
     Wire.beginTransmission(i);                                                // Check current address for device //
     if (Wire.endTransmission()==0) {                                          // If no error we have a device     //

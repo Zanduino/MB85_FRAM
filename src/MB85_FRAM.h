@@ -34,6 +34,7 @@
 **                                                                                                                **
 ** Vers.  Date       Developer                     Comments                                                       **
 ** ====== ========== ============================= ============================================================== **
+** 1.0.4  2018-06-29 https://github.com/SV-Zanshin Issue #3 added support for faster I2C bus speeds               **
 ** 1.0.2a 2017-09-06 https://github.com/SV-Zanshin Added fillMemory() function as a template                      **
 ** 1.0.1  2017-09-06 https://github.com/SV-Zanshin Completed testing for large structures                         **
 ** 1.0.1b 2017-09-06 https://github.com/SV-Zanshin Allow structures > 32 bytes, optimized memory use              **
@@ -48,8 +49,12 @@
   /*****************************************************************************************************************
   ** Declare constants used in the class                                                                          **
   *****************************************************************************************************************/
-  const uint8_t MB85_MIN_ADDRESS        = 0x50;                               // Minimum FRAM address             //
-  const uint8_t MB85_MAX_DEVICES        =    8;                               // Maximum number of FRAM devices   //
+  const uint16_t I2C_STANDARD_MODE       =  100000;                           // Default normal I2C comms speed   //
+  const uint16_t I2C_FAST_MODE           =  400000;                           // Fast mode                        //
+  const uint16_t I2C_FAST_MODE_PLUS_MODE = 1000000;                           // Really fast mode                 //
+  const uint16_t I2C_HIGH_SPEED_MODE     = 3400000;                           // Turbo mode                       //
+  const uint8_t MB85_MIN_ADDRESS         =    0x50;                           // Minimum FRAM address             //
+  const uint8_t MB85_MAX_DEVICES         =       8;                           // Maximum number of FRAM devices   //
 
   /*****************************************************************************************************************
   ** Main MB85_FRAM class for the temperature / humidity / pressure sensor                                        **
@@ -58,7 +63,7 @@
     public:                                                                   // Publicly visible methods         //
       MB85_FRAM_Class();                                                      // Class constructor                //
       ~MB85_FRAM_Class();                                                     // Class destructor                 //
-      uint8_t begin();                                                        // Start using I2C Communications   //
+      uint8_t begin(const uint16_t i2cSpeed = I2C_STANDARD_MODE);             // Start using I2C Communications   //
       uint32_t totalBytes();                                                  // Return the total memory available//
       uint32_t memSize(const uint8_t memNumber);                              // Return memory size in bytes      //
       /*************************************************************************************************************
