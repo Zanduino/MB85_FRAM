@@ -34,6 +34,7 @@
 **                                                                                                                **
 ** Vers.  Date       Developer                     Comments                                                       **
 ** ====== ========== ============================= ============================================================== **
+** 1.0.4  2018-07-02 https://github.com/SV-Zanshin     Added guard code against multiple I2C Speed definitions    **
 ** 1.0.4  2018-06-29 https://github.com/SV-Zanshin Issue #3 added support for faster I2C bus speeds               **
 ** 1.0.2a 2017-09-06 https://github.com/SV-Zanshin Added fillMemory() function as a template                      **
 ** 1.0.1  2017-09-06 https://github.com/SV-Zanshin Completed testing for large structures                         **
@@ -49,10 +50,13 @@
   /*****************************************************************************************************************
   ** Declare constants used in the class                                                                          **
   *****************************************************************************************************************/
-  const uint16_t I2C_STANDARD_MODE       =  100000;                           // Default normal I2C comms speed   //
-  const uint16_t I2C_FAST_MODE           =  400000;                           // Fast mode                        //
-  const uint16_t I2C_FAST_MODE_PLUS_MODE = 1000000;                           // Really fast mode                 //
-  const uint16_t I2C_HIGH_SPEED_MODE     = 3400000;                           // Turbo mode                       //
+  #ifndef I2C_MODES                                                           // I2C related constants            //
+    #define I2C_MODES                                                         // Guard code to prevent multiple   //
+    const uint16_t I2C_STANDARD_MODE              =  100000;                  // Default normal I2C 100KHz speed  //
+    const uint16_t I2C_FAST_MODE                  =  400000;                  // Fast mode                        //
+    const uint16_t I2C_FAST_MODE_PLUS_MODE        = 1000000;                  // Really fast mode                 //
+    const uint16_t I2C_HIGH_SPEED_MODE            = 3400000;                  // Turbo mode                       //
+  #endif                                                                      //----------------------------------//
   const uint8_t MB85_MIN_ADDRESS         =    0x50;                           // Minimum FRAM address             //
   const uint8_t MB85_MAX_DEVICES         =       8;                           // Maximum number of FRAM devices   //
 
