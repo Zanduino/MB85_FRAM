@@ -98,7 +98,9 @@ uint8_t MB85_FRAM_Class::getDevice(uint32_t &memAddress,uint32_t &endAddress){//
     if(_I2C[device]) {                                                        // If there's a memory at address   //
       startAddress = endAddress+1;                                            // Chip starts after previous end   //
       endAddress  += (uint32_t)_I2C[device] * 1024;                           // Compute end of memory chip       //
-     if (endAddress>=memAddress) break;                                       // Exit if we are in range          //
+     if (endAddress>=memAddress) {                                            // Exit if we are in range          //
+       break;                                                                 //                                  //
+     } // of if we need to exit loop                                          //                                  //
      memAddress  -= (uint32_t)_I2C[device] * 1024;                            // adjust memory address            //
     } // of if we have a device at address                                    //                                  //
   } // of for-next all possible devices                                       //                                  //
@@ -109,8 +111,11 @@ uint8_t MB85_FRAM_Class::getDevice(uint32_t &memAddress,uint32_t &endAddress){//
 ** Method memSize() returns the device's size in Kb                                                               **
 *******************************************************************************************************************/
 uint32_t MB85_FRAM_Class::memSize(const uint8_t memNumber) {                  // Return memory size in bytes      //
-  if(memNumber<=_DeviceCount) return((uint32_t)_I2C[memNumber]*1024);         // Return either memory size or the //
-                         else return 0;                                       // value of zero                    //
+  if(memNumber<=_DeviceCount) {                                               // If device is in range            //
+    return((uint32_t)_I2C[memNumber]*1024);                                   // Return either memory size or the //
+  } else {                                                                    //                                  //
+    return 0;                                                                 // value of zero                    //
+  } // of if-then-else device number in range                                 //                                  //
 } // of method memSize()                                                      //----------------------------------//
 
 /*******************************************************************************************************************

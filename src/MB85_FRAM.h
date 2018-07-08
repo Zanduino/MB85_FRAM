@@ -25,6 +25,8 @@
 ** so both my comments and variable names tend to be verbose. The code is written to fit in the first 80 spaces   **
 ** and the comments start after that and go to column 117 - allowing the code to be printed in A4 landscape mode. **
 **                                                                                                                **
+** GNU General Public License v3.0                                                                                **
+** ===============================                                                                                **
 ** This program is free software: you can redistribute it and/or modify it under the terms of the GNU General     **
 ** Public License as published by the Free Software Foundation, either version 3 of the License, or (at your      **
 ** option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY     **
@@ -34,7 +36,8 @@
 **                                                                                                                **
 ** Vers.  Date       Developer                     Comments                                                       **
 ** ====== ========== ============================= ============================================================== **
-** 1.0.4  2018-07-02 https://github.com/SV-Zanshin     Added guard code against multiple I2C Speed definitions    **
+** 1.0.4  2018-07-08 https://github.com/SV-Zanshin Corrected and cleaned up c++ code formatting                   **
+** 1.0.4  2018-07-02 https://github.com/SV-Zanshin Added guard code against multiple I2C Speed definitions        **
 ** 1.0.4  2018-06-29 https://github.com/SV-Zanshin Issue #3 added support for faster I2C bus speeds               **
 ** 1.0.2a 2017-09-06 https://github.com/SV-Zanshin Added fillMemory() function as a template                      **
 ** 1.0.1  2017-09-06 https://github.com/SV-Zanshin Completed testing for large structures                         **
@@ -52,13 +55,13 @@
   *****************************************************************************************************************/
   #ifndef I2C_MODES                                                           // I2C related constants            //
     #define I2C_MODES                                                         // Guard code to prevent multiple   //
-    const uint16_t I2C_STANDARD_MODE              =  100000;                  // Default normal I2C 100KHz speed  //
-    const uint16_t I2C_FAST_MODE                  =  400000;                  // Fast mode                        //
-    const uint16_t I2C_FAST_MODE_PLUS_MODE        = 1000000;                  // Really fast mode                 //
-    const uint16_t I2C_HIGH_SPEED_MODE            = 3400000;                  // Turbo mode                       //
+    const uint16_t I2C_STANDARD_MODE       =  100000;                         // Default normal I2C 100KHz speed  //
+    const uint16_t I2C_FAST_MODE           =  400000;                         // Fast mode                        //
+    const uint16_t I2C_FAST_MODE_PLUS_MODE = 1000000;                         // Really fast mode                 //
+    const uint16_t I2C_HIGH_SPEED_MODE     = 3400000;                         // Turbo mode                       //
   #endif                                                                      //----------------------------------//
-  const uint8_t MB85_MIN_ADDRESS         =    0x50;                           // Minimum FRAM address             //
-  const uint8_t MB85_MAX_DEVICES         =       8;                           // Maximum number of FRAM devices   //
+  const uint8_t MB85_MIN_ADDRESS           =    0x50;                         // Minimum FRAM address             //
+  const uint8_t MB85_MAX_DEVICES           =       8;                         // Maximum number of FRAM devices   //
 
   /*****************************************************************************************************************
   ** Main MB85_FRAM class for the temperature / humidity / pressure sensor                                        **
@@ -92,7 +95,9 @@
           *bytePtr++ = Wire.read();                                           // Put byte read to pointer address //
           if(memAddress++==endAddress) {                                      // If we've reached the end-of-chip //
             for(uint8_t j=0;j<MB85_MAX_DEVICES;j++) {                         // loop to get the next device      //
-              if (device++==MB85_MAX_DEVICES) device = 0;                     // Increment device or start at 0   //
+              if (device++==MB85_MAX_DEVICES) {                               // Increment device or start at 0   //
+                device = 0;                                                   //                                  //
+              } // of if-then we've reached the end of device list            //                                  //
               if (_I2C[device]) {                                             // On a match, address device       //
                 requestI2C(device,0,structSize,true);                         // Get bytes from new memory chip   //
                 memAddress = 0;                                               // New memory address               //
@@ -121,14 +126,18 @@
         uint8_t device        = getDevice(memAddress,endAddress);             // Compute the actual device to use //
         for (uint8_t i=0;i<structSize;i++) {                                  // loop for each byte to be written //
           if(i%(BUFFER_LENGTH-2)==0) {                                        // Check if end of buffer reached   //
-            if(i>0) _TransmissionStatus = Wire.endTransmission();             // Close active transmission        //
+            if(i>0) {                                                         // if we've reached wire lib buffer //
+              _TransmissionStatus = Wire.endTransmission();                   // limit then close active xmission //
+            } // of if-then end of buffer reached                             //                                  // 
             requestI2C(device,memAddress,structSize,false);                   // Position for next buffer data    //
           } // if our write buffer is full                                    //                                  //
           Wire.write(*bytePtr++);                                             // Write current byte to memory     //
           if(memAddress++==endAddress) {                                      // If we've reached the end-of-chip //
             _TransmissionStatus = Wire.endTransmission();                     // Close transmission               //
             for(uint8_t j=0;j<MB85_MAX_DEVICES;j++) {                         // loop to get the next device      //
-              if (device++==MB85_MAX_DEVICES) device = 0;                     // Increment device or start at 0   //
+              if (device++==MB85_MAX_DEVICES) {                               // If at last device then restart   //
+                device = 0;                                                   // at 0                             //
+              } // of if-then reached end of devices                          //                                  //                
               if (_I2C[device]) {                                             // On a match, address device       //
                 requestI2C(device,0,structSize,false);                        // Position memory pointer to begin //
                 memAddress = 0;                                               // New memory address               //
@@ -149,7 +158,9 @@
       template<typename T>uint32_t &fillMemory(const T &value) {              // Fill memory with repeated values //
         uint8_t  structSize = sizeof(T);                                      // Number of bytes in structure     //
         uint32_t i;                                                           // Declare loop counter and return  //
-        for(i=0;i<(_TotalMemory/structSize);i++) write(i*structSize,value);   // Loop number of times that it fits//
+        for ( i=0; i<(_TotalMemory/structSize); i++) {                        // Loop number of times that it fits//
+          write(i*structSize,value);                                          // into memory                      //
+        } // of for-next loop on structure size                               //                                  //
         return i;                                                             // return the number of copies made //
       } // of method fillMemory()                                             //----------------------------------//
       
