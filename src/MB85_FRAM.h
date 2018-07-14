@@ -6,9 +6,9 @@
 ** MB85RC512T 512Kbit ( 64K x 8bit) ManufacturerID 0x00A, Product ID = 0x658 (Density = 0x6)                      **
 ** MB85RC256V 256Kbit ( 32K x 8bit) ManufacturerID 0x00A, Product ID = 0x510 (Density = 0x5)                      **
 ** MB85RC128A 128Kbit ( 16K x 8bit) No ManufacturerID/productID or Density values                                 **
-** MB85RC64TA  64Kbit (  8K x 8bit) No ManufacturerID/productID or Density values                                 **
-** MB85RC64A   64Kbit (  8K x 8bit) No ManufacturerID/productID or Density values                                 **
-** MB85RC64V   64Kbit (  8K x 8bit) No ManufacturerID/productID or Density values                                 **
+** MB85RC64TA  64Kbit (  8K x 8bit) No ManufacturerID/productID or Density values (1.8 to 3.6V)                   **
+** MB85RC64A   64Kbit (  8K x 8bit) No ManufacturerID/productID or Density values (2.7 to 3.6V)                   **
+** MB85RC64V   64Kbit (  8K x 8bit) No ManufacturerID/productID or Density values (3.0 to 5.5V)                   **
 ** - unsupported memories --                                                                                      **
 ** MB85RC1MT    1Mbit (128K x 8bit) ManufacturerID 0x00A, Product ID = 0x758 (Density = 0x7)        (unsupported) **
 ** MB85RC16    16Kbit (  2K x 8bit) No ManufacturerID/productID or Density values  1 Address byte   (unsupported) **
@@ -30,7 +30,7 @@
 ** This program is free software: you can redistribute it and/or modify it under the terms of the GNU General     **
 ** Public License as published by the Free Software Foundation, either version 3 of the License, or (at your      **
 ** option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY     **
-** WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   **
+** WARRANTY; without even the implied warranty of8585 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   **
 ** GNU General Public License for more details. You should have received a copy of the GNU General Public License **
 ** along with this program.  If not, see <http://www.gnu.org/licenses/>.                                          **
 **                                                                                                                **
@@ -64,7 +64,7 @@
   const uint8_t MB85_MAX_DEVICES           =       8;                         // Maximum number of FRAM devices   //
 
   /*****************************************************************************************************************
-  ** Main MB85_FRAM class for the temperature / humidity / pressure sensor                                        **
+  ** Main MB85_FRAM class for the SRAM memory                                                                     **
   *****************************************************************************************************************/
   class MB85_FRAM_Class {                                                     // Class definition                 //
     public:                                                                   // Publicly visible methods         //
