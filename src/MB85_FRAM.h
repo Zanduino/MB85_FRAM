@@ -63,7 +63,11 @@ Version| Date       | Developer                     | Comments
   *****************************************************************************************************************/
   #ifndef FRAM_I2C_MODES
   /** @brief  Guard code to prevent multiple definitions of I2C modes */
-  #define FRAM_I2C_MODES
+#define FRAM_I2C_MODES
+#ifndef BUFFER_LENGTH
+  /** @brief  Define I2C Buffer length if not specified in library */
+  #define BUFFER_LENGTH 32
+#endif
     const uint32_t I2C_STANDARD_MODE       =  100000; ///< Default normal I2C 100KHz speed
     const uint32_t I2C_FAST_MODE           =  400000; ///< Fast mode
     const uint32_t I2C_FAST_MODE_PLUS_MODE = 1000000; ///< Really fast mode
