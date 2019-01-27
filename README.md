@@ -30,6 +30,6 @@ Up to 8 devices can be put on an I2C and the library allows several memories to 
   </tr>
 </table>
 
-See the [Wiki pages](https://github.com/SV-Zanshin/MB85_FRAM/wiki) for details of the class and the variables / functions accessible in it.
+See the [Wiki pages](https://github.com/SV-Zanshin/MB85_FRAM/wiki) for details of the class and the [Doxygen Documentation](https://sv-zanshin.github.io/MB85_FRAM/html/index.html) for detailed class documentation.
 
 ![Zanshin Logo](https://www.sv-zanshin.com/r/images/site/gif/zanshinkanjitiny.gif) <img src="https://www.sv-zanshin.com/r/images/site/gif/zanshintext.gif" width="75"/>
