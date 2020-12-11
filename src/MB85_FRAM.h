@@ -4,8 +4,8 @@
 
  @section intro_section Description
 
-Class definition header for the Fujitsu MB85_FRAM family of memories. The I2C M85xxx memories are described at 
-http://www.fujitsu.com/global/products/devices/semiconductor/memory/fram/lineup/index.html and the list is 
+Class definition header for the Fujitsu MB85_FRAM family of memories. The I2C M85xxx memories are described at
+http://www.fujitsu.com/global/products/devices/semiconductor/memory/fram/lineup/index.html and the list is
 detailed below:\n\n
 
 MB85RC512T 512Kbit ( 64K x 8bit) ManufacturerID 0x00A, Product ID = 0x658 (Density = 0x6)\n
@@ -20,9 +20,9 @@ MB85RC16    16Kbit (  2K x 8bit) No ManufacturerID/productID or Density values  
 MB85RC16V   16Kbit (  2K x 8bit) No ManufacturerID/productID or Density values  1 Address byte   (unsupported)\n
 MB85RC04V    4Kbit ( 512 x 8bit) No ManufacturerID/productID or Density values  1 Address byte   (unsupported)\n\n
 
-There is no direct means of identifying the various chips (apart from the top 3 in the list), so a software method 
-is used which makes use of the fact that writing past the end of memory automatically wraps back around to the 
-beginning. Thus if we write something 1 byte past the end of a chip's address range then byte 0 of the memory will 
+There is no direct means of identifying the various chips (apart from the top 3 in the list), so a software method
+is used which makes use of the fact that writing past the end of memory automatically wraps back around to the
+beginning. Thus if we write something 1 byte past the end of a chip's address range then byte 0 of the memory will
 have changed.
 
 @section MicroChipSRAMlicense GNU General Public License v3.0
@@ -39,18 +39,18 @@ Written by Arnd\@SV-Zanshin
 
 @section versions Changelog
 
-Version| Date       | Developer                     | Comments
------- | ---------- | ----------------------------- | --------
-1.0.5  | 2019-01-26 | https://github.com/SV-Zanshin | Issue #4 - converted documentation to doxygen
-1.0.4  | 2018-07-22 | https://github.com/SV-Zanshin | Corrected I2C Datatypes
-1.0.4  | 2018-07-08 | https://github.com/SV-Zanshin | Corrected and cleaned up c++ code formatting
-1.0.4  | 2018-07-02 | https://github.com/SV-Zanshin | Added guard code against multiple I2C Speed definitions
-1.0.4  | 2018-06-29 | https://github.com/SV-Zanshin | Issue #3 added support for faster I2C bus speeds
-1.0.2a | 2017-09-06 | https://github.com/SV-Zanshin | Added fillMemory() function as a template
-1.0.1  | 2017-09-06 | https://github.com/SV-Zanshin | Completed testing for large structures
-1.0.1b | 2017-09-06 | https://github.com/SV-Zanshin | Allow structures > 32 bytes, optimized memory use
-1.0.0b | 2017-09-04 | https://github.com/SV-Zanshin | Prepared for release, final testing
-1.0.0a | 2017-08-27 | https://github.com/SV-Zanshin | Started coding
+Version| Date       | Developer  | Comments
+------ | ---------- | ---------- | --------
+1.0.5  | 2019-01-26 | SV-Zanshin | Issue #4 - converted documentation to doxygen
+1.0.4  | 2018-07-22 | SV-Zanshin | Corrected I2C Datatypes
+1.0.4  | 2018-07-08 | SV-Zanshin | Corrected and cleaned up c++ code formatting
+1.0.4  | 2018-07-02 | SV-Zanshin | Added guard code against multiple I2C Speed definitions
+1.0.4  | 2018-06-29 | SV-Zanshin | Issue #3 added support for faster I2C bus speeds
+1.0.2a | 2017-09-06 | SV-Zanshin | Added fillMemory() function as a template
+1.0.1  | 2017-09-06 | SV-Zanshin | Completed testing for large structures
+1.0.1b | 2017-09-06 | SV-Zanshin | Allow structures > 32 bytes, optimized memory use
+1.0.0b | 2017-09-04 | SV-Zanshin | Prepared for release, final testing
+1.0.0a | 2017-08-27 | SV-Zanshin | Started coding
 */
 
 #include "Arduino.h" // Arduino data type definitions
@@ -122,7 +122,7 @@ Version| Date       | Developer                     | Comments
           {
             for(uint8_t j=0;j<MB85_MAX_DEVICES;j++) // loop to get the next device
             {
-              if (device++==MB85_MAX_DEVICES) 
+              if (device++==MB85_MAX_DEVICES)
               {
                 device = 0;
               } // of if-then we've reached the end of device list
@@ -162,14 +162,14 @@ Version| Date       | Developer                     | Comments
         {
           if(i%(BUFFER_LENGTH-2)==0)
           {
-            if(i>0) 
+            if(i>0)
             {
               _TransmissionStatus = Wire.endTransmission(); // Close active xmission
             } // of if-then end of buffer reached
             requestI2C(device,memAddress,structSize,false); // Position for next buffer data
           } // if our write buffer is full
           Wire.write(*bytePtr++); // Write current byte to memory
-          if(memAddress++==endAddress) 
+          if(memAddress++==endAddress)
           {
             _TransmissionStatus = Wire.endTransmission(); // Close transmission
             for(uint8_t j=0;j<MB85_MAX_DEVICES;j++)       // loop to get the next device
@@ -192,9 +192,9 @@ Version| Date       | Developer                     | Comments
       } // of method write()
 
 /*!
-* @brief     Declare the fillMemory() method to write as many copies of the "&value" parameter as will fit into the 
+* @brief     Declare the fillMemory() method to write as many copies of the "&value" parameter as will fit into the
 *            the available memory space
-* @details   The bigger the "&value" datatype is, the faster this call will function. Any extra bytes left over if 
+* @details   The bigger the "&value" datatype is, the faster this call will function. Any extra bytes left over if
 *            the memory is not divisible by the length of the "&data" is left untouched
 * @param[in] value Data Type "T" to fill memory with
 * @return    Number of loop iterations used to fill memory
@@ -203,13 +203,13 @@ Version| Date       | Developer                     | Comments
       {
         uint8_t  structSize = sizeof(T); // Number of bytes in structure
         uint32_t i;
-        for ( i=0; i<(_TotalMemory/structSize); i++) 
+        for ( i=0; i<(_TotalMemory/structSize); i++)
         {
           write(i*structSize,value); // Write structure to memory
         } // of for-next loop on structure size
         return i; // return the number of copies written
       } // of method fillMemory()
-      
+
     private:
       uint8_t   getDevice(uint32_t &memAddress, uint32_t &endAddress);
       int8_t    requestI2C(const uint8_t device,const uint32_t memAddress, const uint16_t dataSize, const bool endTrans);       //                                  //

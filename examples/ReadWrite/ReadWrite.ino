@@ -9,8 +9,8 @@ http://www.fujitsu.com/global/products/devices/semiconductor/memory/fram/lineup/
 Adafruit has two of these memories available on breakout boards, https://www.adafruit.com/product/1897 and
 https://www.adafruit.com/product/1897 (this one is SPI, but the chip is also available as I2C\n\n
 
-The program makes use of the https://github.com/SV-Zanshin/MB85_FRAM library, the most recent version of which can
-be downloaded at https://github.com/SV-Zanshin/MB85_FRAM/archive/master.zip \n\n
+The program makes use of the https://github.com/Zanduino/MB85_FRAM library, the most recent version of which can
+be downloaded at https://github.com/Zanduino/MB85_FRAM/archive/master.zip \n\n
 
 The following memories in the MB85 are detected and supported:\n\n
 MB85RC512T 512Kbit ( 64K x 8bit) ManufacturerID 0x00A, Product ID = 0x658 (Density = 0x6)\n
@@ -30,6 +30,23 @@ listed as supported above, and treats them as one contiguous block of memory. Th
 also support structures and arrays. Although the internal I2C library has a 32 byte limitation on the buffer
 size, the library allows for larger structures to be read and written.
 
+@section doxygen configuration
+This library is built with the standard "Doxyfile", which is located at
+https://github.com/Zanduino/Common/blob/main/Doxygen. As described on that page, there are only 5
+environment variables used, and these are set in the project's actions file, located at
+https://github.com/Zanduino/MB85_FRAM/blob/master/.github/workflows/ci-doxygen.yml
+Edit this file and set the 5 variables: PRETTYNAME, PROJECT_NAME, PROJECT_NUMBER, PROJECT_BRIEF and
+PROJECT_LOGO so that these values are used in the doxygen documentation.
+The local copy of the doxyfile should be in the project's root directory in order to do local
+doxygen testing, but the file is ignored on upload to GitHub.
+
+@section clang-format
+Part of the GitHub actions for CI is running every source file through "clang-format" to ensure
+that coding formatting is done the same for all files. The configuration file ".clang-format" is
+located at https://github.com/Zanduino/Common/tree/main/clang-format and this is used for CI tests
+when pushing to GitHub. The local file, if present in the root directory, is ignored when
+committing and uploading.
+
 @section ReadWritelicense GNU General Public License v3.0
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -41,14 +58,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @section ReadWriteauthor Author
 
-Written by Arnd\@SV-Zanshin
+Written by Arnd <Zanshin_Github@sv-zanshin.com> / https://www.github.com/SV-Zanshin
 
 @section ReadWriteversions Changelog
 
-Version | Date       | Developer                     | Comments
-------- | ---------- | ----------------------------- | ---------------------------------------------------
-1.0.1   | 2019-01-27 | https://github.com/SV-Zanshin | Issue #4 - convert documentation to Doxygen
-1.0.0   | 2017-08-27 | https://github.com/SV-Zanshin | Initial coding
+Version | Date       | Developer  | Comments
+------- | ---------- | ---------- | ---------------------------------------------------
+1.0.1   | 2019-01-27 | SV-Zanshin | Issue #4 - convert documentation to Doxygen
+1.0.0   | 2017-08-27 | SV-Zanshin | Initial coding
 */
 #include <MB85_FRAM.h>  // Include the MB85_FRAM library
 /*******************************************************************************************************************
@@ -73,7 +90,7 @@ void setup()
   Serial.begin(SERIAL_SPEED); // Start serial port at Baud rate
 #ifdef  __AVR_ATmega32U4__  // If this is a 32U4 processor, then wait 3 seconds to initialize USB
   delay(3000);
-#endif  
+#endif
   Serial.println("Starting FRAM example program");
   uint8_t chips = FRAM.begin(); // Return number of memories found
   Serial.print("Detected ");
@@ -81,19 +98,19 @@ void setup()
   Serial.print(" MB85xxx memories.\nTotal storage ");
   Serial.print(FRAM.totalBytes());
   Serial.println(" bytes.\nWriting numbers to first 256 bytes of memory.");
-  for(uint32_t i=0;i<256;i++) 
+  for(uint32_t i=0;i<256;i++)
   {
     FRAM.write(i,(uint8_t)i);
   } // of for-next loop
   Serial.println("Reading data from address 100 onwards.");
-  for(uint32_t i=100;i<111;i++) 
+  for(uint32_t i=100;i<111;i++)
   {
     Serial.print(i);
     Serial.print(" = ");
     FRAM.read(i,memByte);
     Serial.println(memByte);
   } // of for-next loop
-  
+
   Serial.println("Writing array to memory.");
   char testArray[13] = "Hello World!";
   FRAM.write(200,testArray);
