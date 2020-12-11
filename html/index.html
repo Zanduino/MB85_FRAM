@@ -89,20 +89,20 @@ $(document).ready(function(){initNavTree('index.html','');});
 Description</h1>
 <p>Class definition header for the Fujitsu MB85_FRAM family of memories. The I2C M85xxx memories are described at <a href="http://www.fujitsu.com/global/products/devices/semiconductor/memory/fram/lineup/index.html">http://www.fujitsu.com/global/products/devices/semiconductor/memory/fram/lineup/index.html</a> and the list is detailed below:<br />
 <br />
- MB85RC512T 512Kbit ( 64K x 8bit) ManufacturerID 0x00A, Product ID = 0x658 (Density = 0x6)<br />
-MB85RC256V 256Kbit ( 32K x 8bit) ManufacturerID 0x00A, Product ID = 0x510 (Density = 0x5)<br />
-MB85RC128A 128Kbit ( 16K x 8bit) No ManufacturerID/productID or Density values<br />
-MB85RC64TA 64Kbit ( 8K x 8bit) No ManufacturerID/productID or Density values (1.8 to 3.6V)<br />
-MB85RC64A 64Kbit ( 8K x 8bit) No ManufacturerID/productID or Density values (2.7 to 3.6V)<br />
-MB85RC64V 64Kbit ( 8K x 8bit) No ManufacturerID/productID or Density values (3.0 to 5.5V)<br />
+ MB85RC512T 512Kbit ( 64Kx8bit) ManufacturerID 0x00A, Product ID = 0x658 (Density = 0x6)<br />
+MB85RC256V 256Kbit ( 32Kx8bit) ManufacturerID 0x00A, Product ID = 0x510 (Density = 0x5)<br />
+MB85RC128A 128Kbit ( 16Kx8bit) No ManufacturerID/productID or Density values<br />
+MB85RC64TA 64Kbit ( 8Kx8bit) No ManufacturerID/productID or Density values (1.8 to 3.6V)<br />
+MB85RC64A 64Kbit ( 8Kx8bit) No ManufacturerID/productID or Density values (2.7 to 3.6V)<br />
+MB85RC64V 64Kbit ( 8Kx8bit) No ManufacturerID/productID or Density values (3.0 to 5.5V)<br />
 <br />
 </p><ul>
 <li>unsupported memories &ndash;<br />
 <br />
-MB85RC1MT 1Mbit (128K x 8bit) ManufacturerID 0x00A, Product ID = 0x758 (Density = 0x7) (unsupported)<br />
-MB85RC16 16Kbit ( 2K x 8bit) No ManufacturerID/productID or Density values 1 Address byte (unsupported)<br />
-MB85RC16V 16Kbit ( 2K x 8bit) No ManufacturerID/productID or Density values 1 Address byte (unsupported)<br />
-MB85RC04V 4Kbit ( 512 x 8bit) No ManufacturerID/productID or Density values 1 Address byte (unsupported)<br />
+MB85RC1MT 1Mbit (128Kx8bit) ManufacturerID 0x00A, Product ID = 0x758 (Density = 0x7) (unsp)<br />
+MB85RC16 16Kbit ( 2Kx8bit) No ManufacturerID/productID or Density values 1 Address byte(unsp)<br />
+MB85RC16V 16Kbit ( 2Kx8bit) No ManufacturerID/productID or Density values 1 Address byte(unsp)<br />
+MB85RC04V 4Kbit ( 512x8bit) No ManufacturerID/productID or Density values 1 Address byte(unsp)<br />
 <br />
  There is no direct means of identifying the various chips (apart from the top 3 in the list), so a software method is used which makes use of the fact that writing past the end of memory automatically wraps back around to the beginning. Thus if we write something 1 byte past the end of a chip's address range then byte 0 of the memory will have changed.</li>
 </ul>

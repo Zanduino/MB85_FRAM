@@ -91,25 +91,18 @@ $(document).ready(function(){initNavTree('class_m_b85___f_r_a_m___class.html',''
 
 <p>Access the MB85_FRAM Family of memories.  
  <a href="class_m_b85___f_r_a_m___class.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="_m_b85___f_r_a_m_8h_source.html">MB85_FRAM.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a903753cad3a824612e8020a07467a801"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_m_b85___f_r_a_m___class.html#a903753cad3a824612e8020a07467a801">MB85_FRAM_Class</a> ()</td></tr>
-<tr class="memdesc:a903753cad3a824612e8020a07467a801"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class constructor.  <a href="#a903753cad3a824612e8020a07467a801">More...</a><br /></td></tr>
 <tr class="separator:a903753cad3a824612e8020a07467a801"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46329c41b90c9f8b1e18899f5dff111d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_m_b85___f_r_a_m___class.html#a46329c41b90c9f8b1e18899f5dff111d">~MB85_FRAM_Class</a> ()</td></tr>
-<tr class="memdesc:a46329c41b90c9f8b1e18899f5dff111d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class destructor.  <a href="#a46329c41b90c9f8b1e18899f5dff111d">More...</a><br /></td></tr>
 <tr class="separator:a46329c41b90c9f8b1e18899f5dff111d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a544e3f433de9f7ed83096cd7cad14049"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_m_b85___f_r_a_m___class.html#a544e3f433de9f7ed83096cd7cad14049">begin</a> (const uint32_t i2cSpeed=<a class="el" href="_m_b85___f_r_a_m_8h.html#a348cbfad3423827f84b19829d91be1a7">I2C_STANDARD_MODE</a>)</td></tr>
-<tr class="memdesc:a544e3f433de9f7ed83096cd7cad14049"><td class="mdescLeft">&#160;</td><td class="mdescRight">starts communications with the device  <a href="#a544e3f433de9f7ed83096cd7cad14049">More...</a><br /></td></tr>
 <tr class="separator:a544e3f433de9f7ed83096cd7cad14049"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8277f556d7be8cbcc869f9cc250151f0"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_m_b85___f_r_a_m___class.html#a8277f556d7be8cbcc869f9cc250151f0">totalBytes</a> ()</td></tr>
-<tr class="memdesc:a8277f556d7be8cbcc869f9cc250151f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the total memory availabe in all MB85 memories.  <a href="#a8277f556d7be8cbcc869f9cc250151f0">More...</a><br /></td></tr>
 <tr class="separator:a8277f556d7be8cbcc869f9cc250151f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a604647692122d15e431603bd40fef03b"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_m_b85___f_r_a_m___class.html#a604647692122d15e431603bd40fef03b">memSize</a> (const uint8_t memNumber)</td></tr>
-<tr class="memdesc:a604647692122d15e431603bd40fef03b"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the device size in Bytes  <a href="#a604647692122d15e431603bd40fef03b">More...</a><br /></td></tr>
 <tr class="separator:a604647692122d15e431603bd40fef03b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd11135b91283631c7b529f80e01053e"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:acd11135b91283631c7b529f80e01053e"><td class="memTemplItemLeft" align="right" valign="top">uint8_t &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_m_b85___f_r_a_m___class.html#acd11135b91283631c7b529f80e01053e">read</a> (const uint32_t addr, T &amp;value)</td></tr>
@@ -117,11 +110,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acd11135b91283631c7b529f80e01053e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9f8215e0fcd7605bd2a7b888ab6f282"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ab9f8215e0fcd7605bd2a7b888ab6f282"><td class="memTemplItemLeft" align="right" valign="top">uint8_t &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_m_b85___f_r_a_m___class.html#ab9f8215e0fcd7605bd2a7b888ab6f282">write</a> (const uint32_t addr, const T &amp;value)</td></tr>
-<tr class="memdesc:ab9f8215e0fcd7605bd2a7b888ab6f282"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare the write method as a template function.  <a href="#ab9f8215e0fcd7605bd2a7b888ab6f282">More...</a><br /></td></tr>
 <tr class="separator:ab9f8215e0fcd7605bd2a7b888ab6f282"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11406e4bf76703b04ddf53f8f35b984e"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a11406e4bf76703b04ddf53f8f35b984e"><td class="memTemplItemLeft" align="right" valign="top">uint32_t &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_m_b85___f_r_a_m___class.html#a11406e4bf76703b04ddf53f8f35b984e">fillMemory</a> (const T &amp;value)</td></tr>
-<tr class="memdesc:a11406e4bf76703b04ddf53f8f35b984e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare the <a class="el" href="class_m_b85___f_r_a_m___class.html#a11406e4bf76703b04ddf53f8f35b984e" title="Declare the fillMemory() method to write as many copies of the &quot;&amp;value&quot; parameter as will fit into th...">fillMemory()</a> method to write as many copies of the "&amp;value" parameter as will fit into the the available memory space.  <a href="#a11406e4bf76703b04ddf53f8f35b984e">More...</a><br /></td></tr>
 <tr class="separator:a11406e4bf76703b04ddf53f8f35b984e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -141,9 +132,8 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Class constructor. </p>
-<p>Currently empty and unused </p>
+<p>Class constructor</p>
+<p>Currently empty and unused</p>
 
 </div>
 </div>
@@ -161,9 +151,8 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Class destructor. </p>
-<p>Currently empty and unused </p>
+<p>Class destructor</p>
+<p>Currently empty and unused</p>
 
 </div>
 </div>
@@ -183,15 +172,14 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>starts communications with the device </p>
+<p>starts communications with the device</p>
 <p>There are 4 possible memory sizes, 8kB, 16kB, 32kB, and 64kB and this function will automatically determine the size of each memory found. The memories will wrap around from the highest-address back to 0 on reads/writes and the detection process makes use of this feature. The contents of memory address 0 is saved and overwritten with 0x00. Then, starting with the smallest memory, the value of the highest value for that memory plus 1 is stored and written to 0xFF. If address 0 has changed to 0xFF then we know we've had a wrap-around and have identified the chip, otherwise we repeat the procedure for the next possible memory size address and so on. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">i2cSpeed</td><td>I2C Bus speed in Herz </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of MB85 devices detected </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of MB85 devices detected</dd></dl>
 
 </div>
 </div>
@@ -220,15 +208,14 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Declare the <a class="el" href="class_m_b85___f_r_a_m___class.html#a11406e4bf76703b04ddf53f8f35b984e" title="Declare the fillMemory() method to write as many copies of the &quot;&amp;value&quot; parameter as will fit into th...">fillMemory()</a> method to write as many copies of the "&amp;value" parameter as will fit into the the available memory space. </p>
+<p>Declare the <a class="el" href="class_m_b85___f_r_a_m___class.html#a11406e4bf76703b04ddf53f8f35b984e">fillMemory()</a> method to write as many copies of the "&amp;value" parameter as will fit into the the available memory space</p>
 <p>The bigger the "&amp;value" datatype is, the faster this call will function. Any extra bytes left over if the memory is not divisible by the length of the "&amp;data" is left untouched </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>Data Type "T" to fill memory with </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of loop iterations used to fill memory </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of loop iterations used to fill memory</dd></dl>
 
 </div>
 </div>
@@ -247,15 +234,13 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>returns the device size in Bytes </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>returns the device size in Bytes </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">memNumber</td><td>Memory index </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Memory size in Bytes </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Memory size in Bytes</dd></dl>
 
 </div>
 </div>
@@ -321,9 +306,7 @@ template&lt;typename T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Return the total memory availabe in all MB85 memories. </p>
-<dl class="section return"><dt>Returns</dt><dd>Total number of bytes available in all memories </dd></dl>
+<p>Return the total memory availabe in all MB85 memories </p><dl class="section return"><dt>Returns</dt><dd>Total number of bytes available in all memories</dd></dl>
 
 </div>
 </div>
@@ -362,8 +345,7 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Declare the write method as a template function. </p>
+<p>Declare the write method as a template function</p>
 <p>Declare the write method as a template function, this needs to be done in the header file rather than by declaring the prototype here and putting the body into the cpp library file. All reading is done through this function. Multiple memories are treated as if they were one large memory, the space is contiguous and a read will wrap around from the end of memory to the beginning. The function can be called with any type of argument as the "&amp;value", including arrays and structures. Although the I2C "wire" has a 32 byte buffer limit, this library will automatically split bigger reads into multiple calls. The size of the "&amp;value" parameter is returned as the optional function value </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">addr</td><td>Memory address </td></tr>
@@ -371,7 +353,7 @@ template&lt;typename T &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of bytes written </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of bytes written</dd></dl>
 
 </div>
 </div>
