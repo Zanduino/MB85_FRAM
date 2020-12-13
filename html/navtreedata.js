@@ -3,6 +3,8 @@ var NAVTREE =
   [ "MB85_FRAM", "index.html", [
     [ "Arduino Library Header to access the MB85 Family of SRAM Memories", "index.html", [
       [ "Description", "index.html#intro_section", null ],
+      [ "doxygen configuration", "index.html#doxygen", null ],
+      [ "clang-format", "index.html#clang-format", null ],
       [ "GNU General Public License v3.0", "index.html#MicroChipSRAMlicense", null ],
       [ "Author", "index.html#author", null ],
       [ "Changelog", "index.html#versions", null ]

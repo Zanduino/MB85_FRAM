@@ -40,9 +40,11 @@ var NAVTREEINDEX0 =
 "globals_vars.html":[2,1,2],
 "index.html":[0],
 "index.html":[],
-"index.html#MicroChipSRAMlicense":[0,1],
-"index.html#author":[0,2],
+"index.html#MicroChipSRAMlicense":[0,3],
+"index.html#author":[0,4],
+"index.html#clang-format":[0,2],
+"index.html#doxygen":[0,1],
 "index.html#intro_section":[0,0],
-"index.html#versions":[0,3],
+"index.html#versions":[0,5],
 "pages.html":[]
 };

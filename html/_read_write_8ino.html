@@ -136,10 +136,10 @@ MB85RC1MT 1Mbit (128K x 8bit) ManufacturerID 0x00A, Product ID = 0x758 (Density 
 <br />
  What sets this library apart is that it will autmatically detect up to 8 memories, in any combination of those listed as supported above, and treats them as one contiguous block of memory. The read() and write() functions also support structures and arrays. Although the internal I2C library has a 32 byte limitation on the buffer size, the library allows for larger structures to be read and written.</li>
 </ul>
-<h1><a class="anchor" id="doxygen"></a>
-configuration</h1>
+<h1><a class="anchor" id="ReadWrite_doxygen"></a>
+doxygen configuration</h1>
 <p>This library is built with the standard "Doxyfile", which is located at <a href="https://github.com/Zanduino/Common/blob/main/Doxygen">https://github.com/Zanduino/Common/blob/main/Doxygen</a>. As described on that page, there are only 5 environment variables used, and these are set in the project's actions file, located at <a href="https://github.com/Zanduino/MB85_FRAM/blob/master/.github/workflows/ci-doxygen.yml">https://github.com/Zanduino/MB85_FRAM/blob/master/.github/workflows/ci-doxygen.yml</a> Edit this file and set the 5 variables: PRETTYNAME, PROJECT_NAME, PROJECT_NUMBER, PROJECT_BRIEF and PROJECT_LOGO so that these values are used in the doxygen documentation. The local copy of the doxyfile should be in the project's root directory in order to do local doxygen testing, but the file is ignored on upload to GitHub.</p>
-<h1><a class="anchor" id="clang-format"></a>
+<h1><a class="anchor" id="ReadWrite_format"></a>
 clang-format</h1>
 <p>Part of the GitHub actions for CI is running every source file through "clang-format" to ensure that coding formatting is done the same for all files. The configuration file ".clang-format" is located at <a href="https://github.com/Zanduino/Common/tree/main/clang-format">https://github.com/Zanduino/Common/tree/main/clang-format</a> and this is used for CI tests when pushing to GitHub. The local file, if present in the root directory, is ignored when committing and uploading.</p>
 <h1><a class="anchor" id="ReadWritelicense"></a>
@@ -147,7 +147,7 @@ GNU General Public License v3.0</h1>
 <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
 <h1><a class="anchor" id="ReadWriteauthor"></a>
 Author</h1>
-<p>Written by Arnd <a href="#" onclick="location.href='mai'+'lto:'+'Zan'+'sh'+'in_'+'Gi'+'thu'+'b@'+'sv-'+'za'+'nsh'+'in'+'.co'+'m'; return false;">Zansh<span style="display: none;">.nosp@m.</span>in_G<span style="display: none;">.nosp@m.</span>ithub<span style="display: none;">.nosp@m.</span>@sv-<span style="display: none;">.nosp@m.</span>zansh<span style="display: none;">.nosp@m.</span>in.c<span style="display: none;">.nosp@m.</span>om</a> / <a href="https://www.github.com/SV-Zanshin">https://www.github.com/SV-Zanshin</a></p>
+<p>Written by Arnd <a href="#" onclick="location.href='mai'+'lto:'+'Arn'+'d@'+'Zan'+'du'+'ino'+'.C'+'om'; return false;">Arnd@<span style="display: none;">.nosp@m.</span>Zand<span style="display: none;">.nosp@m.</span>uino.<span style="display: none;">.nosp@m.</span>Com</a> at <a href="https://www.github.com/SV-Zanshin">https://www.github.com/SV-Zanshin</a></p>
 <h1><a class="anchor" id="ReadWriteversions"></a>
 Changelog</h1>
 <table class="doxtable">

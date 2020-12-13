@@ -106,12 +106,18 @@ MB85RC04V 4Kbit ( 512x8bit) No ManufacturerID/productID or Density values 1 Addr
 <br />
  There is no direct means of identifying the various chips (apart from the top 3 in the list), so a software method is used which makes use of the fact that writing past the end of memory automatically wraps back around to the beginning. Thus if we write something 1 byte past the end of a chip's address range then byte 0 of the memory will have changed.</li>
 </ul>
+<h1><a class="anchor" id="doxygen"></a>
+doxygen configuration</h1>
+<p>This library is built with the standard "Doxyfile", which is located at <a href="https://github.com/Zanduino/Common/blob/main/Doxygen">https://github.com/Zanduino/Common/blob/main/Doxygen</a>. As described on that page, there are only 5 environment variables used, and these are set in the project's actions file, located at <a href="https://github.com/Zanduino/MB85_FRAM/blob/master/.github/workflows/ci-doxygen.yml">https://github.com/Zanduino/MB85_FRAM/blob/master/.github/workflows/ci-doxygen.yml</a> Edit this file and set the 5 variables - PRETTYNAME, PROJECT_NAME, PROJECT_NUMBER, PROJECT_BRIEF and PROJECT_LOGO so that these values are used in the doxygen documentation. The local copy of the doxyfile should be in the project's root directory in order to do local doxygen testing, but the file is ignored on upload to GitHub.</p>
+<h1><a class="anchor" id="clang-format"></a>
+clang-format</h1>
+<p>Part of the GitHub actions for CI is running every source file through "clang-format" to ensure that coding formatting is done the same for all files. The configuration file ".clang-format" is located at <a href="https://github.com/Zanduino/Common/tree/main/clang-format">https://github.com/Zanduino/Common/tree/main/clang-format</a> and this is used for CI tests when pushing to GitHub. The local file, if present in the root directory, is ignored when committing and uploading. </p>
 <h1><a class="anchor" id="MicroChipSRAMlicense"></a>
 GNU General Public License v3.0</h1>
 <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
 <h1><a class="anchor" id="author"></a>
 Author</h1>
-<p>Written by Arnd@SV-Zanshin</p>
+<p>Written by Arnd <a href="#" onclick="location.href='mai'+'lto:'+'Arn'+'d@'+'Zan'+'du'+'ino'+'.C'+'om'; return false;">Arnd@<span style="display: none;">.nosp@m.</span>Zand<span style="display: none;">.nosp@m.</span>uino.<span style="display: none;">.nosp@m.</span>Com</a> at <a href="https://www.github.com/SV-Zanshin">https://www.github.com/SV-Zanshin</a></p>
 <h1><a class="anchor" id="versions"></a>
 Changelog</h1>
 <table class="doxtable">
