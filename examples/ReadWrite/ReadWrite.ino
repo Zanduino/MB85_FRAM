@@ -34,7 +34,7 @@ The read() and write() functions also support structures and arrays. Although th
 library has a 32 byte limitation on the buffer size, the library allows for larger structures to be
 read and written.
 
-@section doxygen configuration
+@section ReadWrite_doxygen doxygen configuration
 This library is built with the standard "Doxyfile", which is located at
 https://github.com/Zanduino/Common/blob/main/Doxygen. As described on that page, there are only 5
 environment variables used, and these are set in the project's actions file, located at
@@ -44,7 +44,7 @@ PROJECT_LOGO so that these values are used in the doxygen documentation.
 The local copy of the doxyfile should be in the project's root directory in order to do local
 doxygen testing, but the file is ignored on upload to GitHub.
 
-@section clang-format
+@section ReadWrite_format clang-format
 Part of the GitHub actions for CI is running every source file through "clang-format" to ensure
 that coding formatting is done the same for all files. The configuration file ".clang-format" is
 located at https://github.com/Zanduino/Common/tree/main/clang-format and this is used for CI tests
