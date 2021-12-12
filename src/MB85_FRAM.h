@@ -77,23 +77,23 @@ Version| Date       | Developer  | Comments
 
 #include "Arduino.h"  // Arduino data type definitions
 #ifndef MB85_FRAM
-/** @brief  Guard code to prevent multiple definitions of the class*/
-#define MB85_FRAM
-/*************************************************************************************************
-** Declare constants used in the class                                                          **
-*************************************************************************************************/
-#ifndef FRAM_I2C_MODES
-/** @brief  Guard code to prevent multiple definitions of I2C modes */
-#define FRAM_I2C_MODES
-#ifndef BUFFER_LENGTH
-/** @brief  Define I2C Buffer length if not specified in library */
-#define BUFFER_LENGTH 32
-#endif
+  /** @brief  Guard code to prevent multiple definitions of the class*/
+  #define MB85_FRAM
+  /*************************************************************************************************
+  ** Declare constants used in the class                                                          **
+  *************************************************************************************************/
+  #ifndef FRAM_I2C_MODES
+    /** @brief  Guard code to prevent multiple definitions of I2C modes */
+    #define FRAM_I2C_MODES
+    #ifndef BUFFER_LENGTH
+      /** @brief  Define I2C Buffer length if not specified in library */
+      #define BUFFER_LENGTH 32
+    #endif
 const uint32_t I2C_STANDARD_MODE{100000};         ///< Default normal I2C 100KHz speed
 const uint32_t I2C_FAST_MODE{400000};             ///< Fast mode
 const uint32_t I2C_FAST_MODE_PLUS_MODE{1000000};  ///< Really fast mode
 const uint32_t I2C_HIGH_SPEED_MODE = {3400000};   ///< Turbo mode
-#endif
+  #endif
 const uint8_t MB85_MIN_ADDRESS{0x50};  ///< Minimum FRAM address
 const uint8_t MB85_MAX_DEVICES{8};     ///< Maximum number of FRAM devices
 

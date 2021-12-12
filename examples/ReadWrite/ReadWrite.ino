@@ -103,9 +103,7 @@ void setup() {
   Serial.print(" MB85xxx memories.\nTotal storage ");
   Serial.print(FRAM.totalBytes());
   Serial.println(" bytes.\nWriting numbers to first 256 bytes of memory.");
-  for (uint32_t i = 0; i < 256; i++) {
-    FRAM.write(i, (uint8_t)i);
-  }  // of for-next loop
+  for (uint32_t i = 0; i < 256; i++) { FRAM.write(i, (uint8_t)i); }  // of for-next loop
   Serial.println("Reading data from address 100 onwards.");
   for (uint32_t i = 100; i < 111; i++) {
     Serial.print(i);
