@@ -33,7 +33,7 @@ uint8_t MB85_FRAM_Class::begin(const uint32_t i2cSpeed) {
              from the highest-address back to 0 on reads/writes and the detection process makes use
              of this feature. The contents of memory address 0 is saved and overwritten with 0x00.
              Then, starting with the smallest memory, the value of the highest value for that memory
-             plus 1 is stored and written to 0xFF. If address 0 has changed to 0xFF then we know
+             plus 1 is stored and written as 0xFF. If address 0 has changed to 0xFF then we know
              we've had a wrap-around and have identified the chip, otherwise we repeat the procedure
              for the next possible memory size address and so on.
   @param[in] i2cSpeed I2C Bus speed in Herz
@@ -48,64 +48,67 @@ uint8_t MB85_FRAM_Class::begin(const uint32_t i2cSpeed) {
     {
       for (uint16_t memSize = 8192; memSize != 0; memSize = memSize * 2)  // Check each memory size
       {
-        Wire.beginTransmission(i);  // Start transmission
-        Wire.write((uint8_t)0);
-        Wire.write((uint8_t)0);                        // Start at address 0
+        // Read the contents of address 0 and store into "minimumByte"
+        Wire.beginTransmission(i);                     // Start transmission
+        Wire.write((uint8_t)0);                        // Start at MSB address 0
+        Wire.write((uint8_t)0);                        // Start at LSB address 0
         _TransmissionStatus = Wire.endTransmission();  // Close transmission
         Wire.requestFrom(i, (uint8_t)1);               // Request 1 byte of data
         uint8_t minimumByte = Wire.read();             // Store value of byte 0
 
-        Wire.beginTransmission(i);  // Start transmission
-        Wire.write((uint8_t)0);
-        Wire.write((uint8_t)0);                        // Start at address 0
+        // Write 0xFF to address 0
+        Wire.beginTransmission(i);                     // Start transmission
+        Wire.write((uint8_t)0);                        // Start at MSB address 0
+        Wire.write((uint8_t)0);                        // Start at LSB address 0
         Wire.write(0xFF);                              // write high value to address 0
         _TransmissionStatus = Wire.endTransmission();  // Close transmission
 
+        // Read the value at address "memSize" to "maximumByte"
         Wire.beginTransmission(i);                     // Start transmission
-        Wire.write((uint8_t)memSize >> 8);             // Write MSB of address
-        Wire.write((uint8_t)memSize);                  // Write LsB of address
+        Wire.write((uint8_t)(memSize >> 8));           // Write MSB of address
+        Wire.write((uint8_t)memSize);                  // Write LSB of address
         _TransmissionStatus = Wire.endTransmission();  // Close transmission
         Wire.requestFrom(i, (uint8_t)1);               // Request 1 byte of data
         uint8_t maximumByte = Wire.read();             // Store value of high byte for chip
+
+        // Write a 0x00 to address "memSize"
         Wire.beginTransmission(i);                     // Start transmission
-        Wire.write((uint8_t)memSize >> 8);             // Write MSB of address
-        Wire.write((uint8_t)memSize);                  // Write LsB of address
+        Wire.write((uint8_t)(memSize >> 8));           // Write MSB of address
+        Wire.write((uint8_t)memSize);                  // Write LSB of address
         Wire.write(0x00);                              // write low value to max address
         _TransmissionStatus = Wire.endTransmission();  // Close transmission
 
-        Wire.beginTransmission(i);  // Start transmission
-        Wire.write((uint8_t)0);
-        Wire.write((uint8_t)0);                        // Start at address 0
+        // Read the value at 0x00
+        Wire.beginTransmission(i);                     // Start transmission
+        Wire.write((uint8_t)0);                        // Start at MSB address 0
+        Wire.write((uint8_t)0);                        // Start at LSB address 0
         _TransmissionStatus = Wire.endTransmission();  // Close transmission
         Wire.requestFrom(i, (uint8_t)1);               // Request 1 byte of data
         uint8_t newMinimumByte = Wire.read();          // Store value of byte 0
-        if (newMinimumByte != 0x00)                    // If the value has changed
-        {
-          _I2C[i - MB85_MIN_ADDRESS] = memSize / 1024;  // Store memory size in kB
-          _TotalMemory += memSize;                      // Add value to total
-          Wire.beginTransmission(i);                    // Start transmission
-          Wire.write((uint8_t)0);
-          Wire.write((uint8_t)0);                        // Position to address 0
+
+        // Write the original value back to memory
+        Wire.beginTransmission(i);                     // Start transmission
+        Wire.write((uint8_t)(memSize >> 8));           // Write MSB of address
+        Wire.write((uint8_t)memSize);                  // Write LSB of address
+        Wire.write(maximumByte);                       // restore original value
+        _TransmissionStatus = Wire.endTransmission();  // Close transmission
+
+        if (newMinimumByte != 0xFF)                      // Check if the value has changed
+        {                                                //
+          _I2C[i - MB85_MIN_ADDRESS] = memSize / 1024;   // Store memory size in kB
+          _TotalMemory += memSize;                       // Add value to total
+          Wire.beginTransmission(i);                     // Start transmission
+          Wire.write((uint8_t)0);                        // Write MSB of address
+          Wire.write((uint8_t)0);                        // Write LSB of address
           Wire.write(minimumByte);                       // restore original value
           _TransmissionStatus = Wire.endTransmission();  // Close transmission
           break;                                         // Exit the loop
-        } else {
-          Wire.beginTransmission(i);                     // Start transmission
-          Wire.write((uint8_t)memSize >> 8);             // Write MSB of address
-          Wire.write((uint8_t)memSize);                  // Write LsB of address
-          Wire.write(maximumByte);                       // restore original value
-          _TransmissionStatus = Wire.endTransmission();  // Close transmission
-        }                                                // of if-then-else we've got a wraparound
-        if (!_I2C[i - MB85_MIN_ADDRESS])                 // If none of the above, then 32kB
-        {
-          _I2C[i - MB85_MIN_ADDRESS] = 32;  // Set array size
-          _TotalMemory += 32768;            // Add value to total
-        }                                   // of if-then max memory
-      }                                     // of for-next loop for each memory size
-      _DeviceCount++;                       // Increment the found count
-    }                                       // of if-then we have found a device
-  }                                         // of for-next each I2C address loop
-  return _DeviceCount;                      // return number of memories found
+        }                                                // of if-then we've got a wraparound
+      }                                                  // of for-next loop for each memory size
+      _DeviceCount++;                                    // Increment the found count
+    }                                                    // of if-then we have found a device
+  }                                                      // of for-next each I2C address loop
+  return _DeviceCount;                                   // return number of memories found
 }  // of method begin()
 uint8_t MB85_FRAM_Class::getDevice(uint32_t &memAddress, uint32_t &endAddress) {
   /*!

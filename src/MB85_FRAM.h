@@ -61,6 +61,7 @@ Written by Arnd <Arnd@Zanduino.Com> at https://www.github.com/SV-Zanshin
 
 Version| Date       | Developer  | Comments
 ------ | ---------- | ---------- | --------
+1.0.6  | 2022-10-02 | LMFLox     | Issue #7 - corrected computation of chip type
 1.0.5  | 2019-01-26 | SV-Zanshin | Issue #4 - converted documentation to doxygen
 1.0.4  | 2018-07-22 | SV-Zanshin | Corrected I2C Datatypes
 1.0.4  | 2018-07-08 | SV-Zanshin | Corrected and cleaned up c++ code formatting
