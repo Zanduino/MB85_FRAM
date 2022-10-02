@@ -173,7 +173,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>starts communications with the device</p>
-<p>There are 4 possible memory sizes, 8kB, 16kB, 32kB, and 64kB and this function will automatically determine the size of each memory found. The memories will wrap around from the highest-address back to 0 on reads/writes and the detection process makes use of this feature. The contents of memory address 0 is saved and overwritten with 0x00. Then, starting with the smallest memory, the value of the highest value for that memory plus 1 is stored and written to 0xFF. If address 0 has changed to 0xFF then we know we've had a wrap-around and have identified the chip, otherwise we repeat the procedure for the next possible memory size address and so on. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>There are 4 possible memory sizes, 8kB, 16kB, 32kB, and 64kB and this function will automatically determine the size of each memory found. The memories will wrap around from the highest-address back to 0 on reads/writes and the detection process makes use of this feature. The contents of memory address 0 is saved and overwritten with 0x00. Then, starting with the smallest memory, the value of the highest value for that memory plus 1 is stored and written as 0xFF. If address 0 has changed to 0xFF then we know we've had a wrap-around and have identified the chip, otherwise we repeat the procedure for the next possible memory size address and so on. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">i2cSpeed</td><td>I2C Bus speed in Herz </td></tr>
   </table>
